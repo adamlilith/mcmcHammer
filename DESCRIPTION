@@ -28,3 +28,4 @@ Depends:
 Suggests:
 	coda
 LazyData: true
+RoxygenNote: 7.2.1
