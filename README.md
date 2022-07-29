@@ -16,7 +16,7 @@ You can install `emcemc` from GitHub using:
 
 You may need to install the `remotes` package first, using
 
-`install.packages('remotes')
+`install.packages('remotes')`
 
 # Functions
 
@@ -24,6 +24,6 @@ You may need to install the `remotes` package first, using
 * `emc_stack_chains`: "Stack" multiple MCMC chains on one another
 
 ### MCMC diagnostics
-* `emc_trace_dens`; Trace plots and density plots
+* `emc_trace_dens`: Trace plots and density plots
 
 ~ Adam ~
