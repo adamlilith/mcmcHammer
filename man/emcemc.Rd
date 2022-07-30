@@ -17,12 +17,12 @@ Create an issue on \href{https://github.com/adamlilith/enmemc/issues}{GitHub}.
 
 \section{MCMC chain manipulation}{
 
-		\code{\link{emc_stack_chains}} "Stack" multiple MCMC chains on one another \cr
+		\code{\link{emc_stack}} "Stack" multiple MCMC chains on one another \cr
 }
 
 \section{Helper functions}{
 
-		\code{\link{emc_vars}} Create variable names (e.g., with indices) \cr
+		\code{\link{emc_param}} Create variable names (e.g., with indices) \cr
 }
 
 \author{
