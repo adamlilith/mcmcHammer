@@ -1,6 +1,8 @@
 # emcemc
  Tools for analysis of MCMC chains
  
+<img align='right' src='emcemc.png' height='250'/>
+ 
 `emcemc` is just like all the other packages for analyzing MCMC chains from Bayesian analysis, except that it's not.  Like the others, it can create trace plots and density plots.  But unlike them, it automates "extracting" variables, especially variables with indices.  For example, say your set of MCMC chains have variables named `beta0`, `beta1`, and `beta2`, as well as `gamma[1, 1]`, `gamma[1, 2]`, `gamma[2, 1]` and `gamma[2, 2]`. You can easily create trace plots and density plots for each of these with minimal "manual" tweaking of variable names. Perforce:
  
 `emc_trace_dens(mcmc, 'beta', i=0:2)`  
@@ -20,10 +22,14 @@ You may need to install the `remotes` package first, using
 
 # Functions
 
-### MCMC chain manipulation
-* `emc_stack_chains`: "Stack" multiple MCMC chains on one another
-
-### MCMC diagnostics
+### MCMC diagnostics and summaries
 * `emc_trace_dens`: Trace plots and density plots
+* `emc_summarize`: Calculate summary statistics for each variable
+
+### MCMC chain manipulation
+* `emc_stack`: "Stack" multiple MCMC chains on one another
+
+### Helper functions
+* `emc_param` Create variable names with or without indices
 
 ~ Adam ~

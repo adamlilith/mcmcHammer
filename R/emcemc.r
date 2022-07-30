@@ -5,11 +5,14 @@
 #' Create an issue on \href{https://github.com/adamlilith/enmemc/issues}{GitHub}.
 #'
 #' @details
-#' @section MCMC chain manipulation:
-#' 		\code{\link{emc_stack_chains}} "Stack" multiple MCMC chains on one another \cr
-#'
 #' @section MCMC diagnostics:
 #' 		\code{\link{emc_trace_dens}} Trace plots and density plots \cr
+#' 
+#' @section MCMC chain manipulation:
+#' 		\code{\link{emc_stack}} "Stack" multiple MCMC chains on one another \cr
+#'
+#' @section Helper functions:
+#' 		\code{\link{emc_param}} Create variable names (e.g., with indices) \cr
 #' 
 #' @docType package
 #' @author Adam B. Smith
