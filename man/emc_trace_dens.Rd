@@ -21,20 +21,9 @@ emc_trace_dens(
 \arguments{
 \item{x}{An object of class \code{mcmc} or \code{mcmc.list}, or a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then plots this if it can.}
 
-\item{var}{Name of the variable(s) to plot. The outcome depends on the definitions of \code{i}, \code{j}, or \code{k}:
-\itemize{
-        \item \code{var = NULL}: Plot all monitored parameters.
-        \item \code{var =} a character vector and \code{i}, \code{j}, and \code{k} are all \code{NULL}: Plot the variable(s) exactly as named.
-        \item \code{var =} a character vector and \code{i} is a numeric vector: Plot all parameters with the pattern "\code{var*}" where \code{*} is \code{i}. For example: \code{beta1}, \code{beta2}, and \code{beta3}.
-        \item \code{var =} a character vector and \code{i} is \code{TRUE}: Plot all parameters with the pattern \code{beta*} where \code{*} is 1 through the maximum value found in the \code{mcmc} object.
-    \item \code{var =} a character vector and \code{j} is a numeric vector: Plot all parameters with the pattern "\code{beta[j]}".
-    \item \code{var =} a character vector and \code{j} and \code{k} are a numeric vectors: Plot all parameters with the pattern "\code{beta[j, k]}".
-    \item \code{var =} a character vector and \code{j}, \code{k}, and \code{l} are a numeric vectors: Plot all parameters with the pattern "\code{beta[j, k, l]}".
-    \item \code{var =} a character vector and \code{i}, \code{j}, \code{k}, and \code{l} are a numeric vectors: Plot all parameters with the pattern "\code{beta*[j, k, l]}" where \code{*} is \code{i}.
-    \item \code{var =} a character vector and any of \code{i}, \code{j}, \code{k}, and/or \code{l} are \code{TRUE}: Plot the given pattern up the the maximum value of \code{i}, \code{j}, \code{k}, and/or \code{l}.
-}}
+\item{var}{Name of the variable(s). The outcome depends on the definitions of \code{i}, \code{j}, \code{k}, and \code{l}. Please see the help for \code{\link{emc_vars}} for more explanation on how to specify this argument, plus \code{i}, \code{j}, \code{k}, and \code{l}.}
 
-\item{i, j, kl}{These can be either \code{NULL} (default), integer vectors, or \code{TRUE}.}
+\item{i, j, k, l}{Indices used to specify variable names.}
 
 \item{trace}{Logical. If \code{TRUE} (default), generate a trace plot.}
 
@@ -52,5 +41,5 @@ emc_trace_dens(
 A \pkg{ggplot2} \code{ggplot} graphic object and (possibly) a file saved.
 }
 \description{
-This function creates trace plots and/or density plots. It automates finding of indexed variable. These include, for example, variables like \code{beta1}, \code{beta2}, \code{beta3}, etc. or variables like \code{beta[1]}, \code{beta[2]}, \code{beta[1]}, etc.
+Trace plots and density plots
 }

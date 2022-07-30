@@ -7,11 +7,12 @@
 #' @return Matrix.
 #' @export
 
-emc_stack_chains <- function(x) {
+emc_stack <- function(x) {
 
 	# "stacking" all chains on one another
 	if (inherits(x, 'mcmc.list')) {
 		
+		# add first chain
 		mcmc <- x[[1L]]
 		max_iter <- nrow(mcmc)
 		iter <- 1L:max_iter
@@ -23,7 +24,7 @@ emc_stack_chains <- function(x) {
 		)
 		mcmc <- cbind(add, mcmc)
 		
-
+		# add subsequent chains
 		if (length(x) > 1L) {
 			for (count in 2L:length(x)) {
 
@@ -52,7 +53,7 @@ emc_stack_chains <- function(x) {
 		while (!is_mcmc) {
 			if (inherits(x[[count]], c('mcmc', 'mcmc.list'))) {
 				x <- x[[count]]
-				mcmc <- emc_compile_chains(x)
+				mcmc <- emc_stack(x)
 				is_mcmc <- TRUE
 			}
 			count <- count + 1L
@@ -61,6 +62,7 @@ emc_stack_chains <- function(x) {
 		stop('Argument "x" must be an object of class "mcmc", "mcmc.list", or "list".')
 	}
 
+	mcmc <- data.table::as.data.table(mcmc)
 	mcmc
 	
 }

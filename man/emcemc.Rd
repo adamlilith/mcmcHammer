@@ -10,14 +10,19 @@ Helper functions for analyzing MCMC chains. Includes trace plots and density plo
 \details{
 Create an issue on \href{https://github.com/adamlilith/enmemc/issues}{GitHub}.
 }
+\section{MCMC diagnostics}{
+
+		\code{\link{emc_trace_dens}} Trace plots and density plots \cr
+}
+
 \section{MCMC chain manipulation}{
 
 		\code{\link{emc_stack_chains}} "Stack" multiple MCMC chains on one another \cr
 }
 
-\section{MCMC diagnostics}{
+\section{Helper functions}{
 
-		\code{\link{emc_trace_dens}} Trace plots and density plots \cr
+		\code{\link{emc_vars}} Create variable names (e.g., with indices) \cr
 }
 
 \author{

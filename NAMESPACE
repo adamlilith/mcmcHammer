@@ -2,3 +2,4 @@
 
 export(emc_stack_chains)
 export(emc_trace_dens)
+export(emc_vars)
