@@ -5,37 +5,42 @@
 \title{Trace plots and density plots}
 \usage{
 emc_trace_dens(
-  x,
-  var = NULL,
+  mcmc,
+  param = NULL,
   i = NULL,
   j = NULL,
   k = NULL,
   l = NULL,
   trace = TRUE,
-  loess = TRUE,
+  smooth = TRUE,
+  density = TRUE,
   nrows = 5,
+  ncols = 1,
   file = NULL,
+  mcmc_stacked = FALSE,
   ...
 )
 }
 \arguments{
-\item{x}{An object of class \code{mcmc} or \code{mcmc.list}, or a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then plots this if it can.}
+\item{mcmc}{An object of class \code{mcmc} or \code{mcmc.list}, or a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then plots this if it can.}
 
-\item{var}{Name of the variable(s). The outcome depends on the definitions of \code{i}, \code{j}, \code{k}, and \code{l}. Please see the help for \code{\link{emc_vars}} for more explanation on how to specify this argument, plus \code{i}, \code{j}, \code{k}, and \code{l}.}
+\item{param}{Name of the variable(s). The outcome depends on the definitions of \code{i}, \code{j}, \code{k}, and \code{l}. Please see the help for \code{\link{emc_param}} for more explanation on how to specify this argument, plus \code{i}, \code{j}, \code{k}, and \code{l}.}
 
 \item{i, j, k, l}{Indices used to specify variable names.}
 
 \item{trace}{Logical. If \code{TRUE} (default), generate a trace plot.}
 
-\item{loess}{Logical. If \code{TRUE} (default), draw a LOESS line for each chain in a trace plot.}
-
-\item{nrows}{Number of rows of graphs to display per "page".}
-
-\item{file}{Either \code{NULL} (default) or name of a file to which to save. Specifying a PDF file is especially helpful for cases where the}
-
-\item{...}{Arguments to pass to \code{\link[ggplot2]{ggsave}}.}
+\item{smooth}{Logical. If \code{TRUE} (default), draw a LOESS line for each chain in a trace plot.}
 
 \item{density}{Logical. If \code{TRUE} (default), generate a density plot.}
+
+\item{nrows, ncols}{Number of rows and columns of graphs to display per "page".}
+
+\item{file}{Either \code{NULL} (default) or name of a file to which to save (including the file type suffix, like \code{.png} or \code{.pdf}). Specifying a PDF file is especially helpful for cases where there are many plots and multiple pages need to be made to display them.}
+
+\item{mcmc_stacked}{\code{FALSE} (default), in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE}, in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{emc_stack}}, then using that for \code{mcmc}.}
+
+\item{...}{Arguments to pass to \code{\link[ggplot2]{ggsave}}.}
 }
 \value{
 A \pkg{ggplot2} \code{ggplot} graphic object and (possibly) a file saved.
