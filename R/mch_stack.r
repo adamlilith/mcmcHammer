@@ -7,7 +7,7 @@
 #' @return Matrix.
 #' @export
 
-emc_stack <- function(x) {
+mch_stack <- function(x) {
 
 	# "stacking" all chains on one another
 	if (inherits(x, 'mcmc.list')) {
@@ -53,7 +53,7 @@ emc_stack <- function(x) {
 		while (!is_mcmc) {
 			if (inherits(x[[count]], c('mcmc', 'mcmc.list'))) {
 				x <- x[[count]]
-				mcmc <- emc_stack(x)
+				mcmc <- mch_stack(x)
 				is_mcmc <- TRUE
 			}
 			count <- count + 1L
