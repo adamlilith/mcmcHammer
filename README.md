@@ -25,12 +25,12 @@ You may need to install the `remotes` package first, using:
 
 Most function require either an object of class `mcmc` or `mcmc.list`, which are often the format of output from modeling functions in Bayesian packages. However, they can also be created by the `coda` package. Functions in `mcmcHammer` will need to "stack" `mcmc` objects before they can be used. Here, a "stack" is the product of simply `rbind`-ing one `mcmc` matrix on top of the next. Stacking can be done automatically by each function if the argument `stacked` is `FALSE`, but if you are using the functions a lot, it's easier and often much faster to stack the `mcmc` chains first then use this as the input into functions:
 
-`library(mcmcHammer)`
+`library(mcmcHammer)`  
 `data(mcmc)`
 
 `mcmc_stacked <- mch_stack(mcmc)`
 
-Now, we can call the `mch` functions with the stacked version of the MCMC chains:
+Now, we can call summary and diagnostic functions with the stacked version of the MCMC chains:
 
 `mch_trace_density(mcmc_stacked, param='beta', i=0:5)`  
 `mch_summarize(mcmc_stacked, fun=mean, param='gamma', j=1:2, k=1:2)`
