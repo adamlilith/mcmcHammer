@@ -8,7 +8,7 @@
 #' @param smooth Logical. If \code{TRUE} (default), draw a LOESS line for each chain in a trace plot.
 #' @param nrows,ncols Number of rows and columns of graphs to display per "page".
 #' @param file Either \code{NULL} (default) or name of a file to which to save (including the file type suffix, like \code{.png} or \code{.pdf}). Specifying a PDF file is especially helpful for cases where there are many plots and multiple pages need to be made to display them.
-#' @param mcmch_stacked \code{FALSE} (default), in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE}, in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.
+#' @param stacked \code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.
 #' @param ... Arguments to pass to \code{\link[ggplot2]{ggsave}}.
 #'
 #' @return A \pkg{ggplot2} \code{ggplot} graphic object and (possibly) a file saved.
@@ -27,12 +27,12 @@ mch_trace_dens <- function(
 	nrows = 5,
 	ncols = 1,
 	file = NULL,
-	mcmch_stacked = FALSE,
+	stacked = TRUE,
 	...
 ) {
 
 	### compile mcmc
-	if (!mcmch_stacked) mcmc <- mch_stack(mcmc)
+	if (!stacked) mcmc <- mch_stack(mcmc)
 	
 	param <- mch_param(
 		param = param,
@@ -41,7 +41,7 @@ mch_trace_dens <- function(
 		k = k,
 		l = l,
 		mcmc = mcmc,
-		mcmch_stacked = TRUE
+		stacked = TRUE
 	)
 	
 	### convert chains into tall format
@@ -78,7 +78,7 @@ mch_trace_dens <- function(
 
 	### plot
 	graphs <- list()
-	count_graph <- 1
+	count_graph <- 1L
 	for (valid_var in valid_params) {
 
 		# trace plot

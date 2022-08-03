@@ -11,7 +11,7 @@ mch_param(
   k = NULL,
   l = NULL,
   mcmc = NULL,
-  mcmch_stacked = FALSE
+  stacked = TRUE
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ mch_param(
 
 \item{mcmc}{Either \code{NULL} (default), or an object of class \code{mcmc} or \code{mcmc.list}, or a \code{list}. If \code{NULL}, then the returned variable names are not necessarily found in the MCMC object.  If a \code{list}, the function searches iteratively down the first element of the list to see if it can find an \code{mcmc} or \code{mcmc.list} object.}
 
-\item{mcmch_stacked}{\code{FALSE} (default), in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE}, in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.}
+\item{stacked}{\code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.}
 }
 \value{
 Character vector of variables.
