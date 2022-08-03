@@ -15,7 +15,7 @@
 #'		\item \code{param =} a character vector and one or more of \code{j}, \code{k}, and \code{l} are a numeric vectors and/or \code{TRUE}: Variables with the pattern "\code{beta[*, k, l]}", "\code{beta[j, *, l]}", "\code{beta[j, k, *]}", "\code{beta[*, *, l]}", "\code{beta[*, k, *]}",  "\code{beta[j, *, *]}", or "\code{beta[*, *, *]}". You must supply \code{mcmc} in this case.
 #' } 
 #' @param mcmc	Either \code{NULL} (default), or an object of class \code{mcmc} or \code{mcmc.list}, or a \code{list}. If \code{NULL}, then the returned variable names are not necessarily found in the MCMC object.  If a \code{list}, the function searches iteratively down the first element of the list to see if it can find an \code{mcmc} or \code{mcmc.list} object.
-#' @param mcmch_stacked \code{FALSE} (default), in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE}, in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.
+#' @param stacked \code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.
 #'
 #' @return Character vector of variables.
 #' 
@@ -58,14 +58,14 @@ mch_param <- function(
 	k = NULL,
 	l = NULL,
 	mcmc = NULL,
-	mcmch_stacked = FALSE
+	stacked = TRUE
 ) {
 
 	### stack MCMC object
 	if (!is.null(mcmc)) {
-		if (!mcmch_stacked) {
+		if (!stacked) {
 			mcmc <- mch_stack(mcmc)
-			mcmch_stacked <- TRUE
+			stacked <- TRUE
 		}
 	}
 
