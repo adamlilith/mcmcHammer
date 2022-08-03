@@ -17,7 +17,7 @@ mch_trace_dens(
   nrows = 5,
   ncols = 1,
   file = NULL,
-  mcmch_stacked = FALSE,
+  stacked = TRUE,
   ...
 )
 }
@@ -38,7 +38,7 @@ mch_trace_dens(
 
 \item{file}{Either \code{NULL} (default) or name of a file to which to save (including the file type suffix, like \code{.png} or \code{.pdf}). Specifying a PDF file is especially helpful for cases where there are many plots and multiple pages need to be made to display them.}
 
-\item{mcmch_stacked}{\code{FALSE} (default), in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE}, in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.}
+\item{stacked}{\code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.}
 
 \item{...}{Arguments to pass to \code{\link[ggplot2]{ggsave}}.}
 }
