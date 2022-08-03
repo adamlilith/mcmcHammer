@@ -14,7 +14,7 @@
 #' @return A \pkg{ggplot2} \code{ggplot} graphic object and (possibly) a file saved.
 #' @export
 
-mch_trace_dens <- function(
+mch_trace_density <- function(
 	mcmc,
 	param = NULL,
 	i = NULL,
@@ -120,12 +120,13 @@ mch_trace_dens <- function(
 		out <- graphs[[1L]]
 	} else {
 		nrows <- min(nrows, length(graphs))
-		# out <- cowplot::plot_grid(plotlist = graphs, ncol=ncols, nrow=nrows, ...)
-		out <- cowplot::plot_grid(plotlist = graphs, ncol=ncols, nrow=nrows, byrow=FALSE)
-		# out <- do.call(cowplot::plot_grid, args=list(plotlist=graphs, ncol=ncols, nrow=nrows, ...))
+		out <- cowplot::plot_grid(plotlist = graphs, ncol = ncols, nrow = nrows) # byrow=FALSE --> error
 	}
 	
-	if (!is.null(file)) ggplot2::ggsave(plot=out, filename=file, ...)
-	out
+	if (!is.null(file)) {
+		ggplot2::ggsave(plot=out, filename=file, ...)
+	} else {
+		out
+	}
 
 }
