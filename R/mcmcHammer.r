@@ -6,7 +6,7 @@
 #'
 #' @details
 #' @section MCMC diagnostics:
-#' 		\code{\link{emch_trace_dens}} Trace plots and density plots \cr
+#' 		\code{\link{emch_trace_density}} Trace plots and density plots \cr
 #' 
 #' @section MCMC chain manipulation:
 #' 		\code{\link{emch_stack}} "Stack" multiple MCMC chains on one another \cr
