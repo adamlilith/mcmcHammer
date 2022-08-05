@@ -1,14 +1,14 @@
 #' Trace plots and density plots
 #'
-#' @param mcmc	An object of class \code{mcmc} or \code{mcmc.list}, or a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then plots this if it can.
+#' @param mcmc	An "tall" set of MCMC chains, \emph{or} an object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then plots this if it can.
 #' @param param Name of the variable(s). The outcome depends on the definitions of \code{i}, \code{j}, \code{k}, and \code{l}. Please see the help for \code{\link{mch_param}} for more explanation on how to specify this argument, plus \code{i}, \code{j}, \code{k}, and \code{l}.
-#' @param i,j,k,l Indices used to specify variable names.
+#' @param i,j,k,l Indices used to specify variable names. Please see the help for \code{\link{mch_param}}.
 #' @param trace Logical. If \code{TRUE} (default), generate a trace plot.
 #' @param density Logical. If \code{TRUE} (default), generate a density plot.
 #' @param smooth Logical. If \code{TRUE} (default), draw a LOESS line for each chain in a trace plot.
-#' @param nrows,ncols Number of rows and columns of graphs to display per "page".
+#' @param nrow,ncol Number of rows and columns of graphs to display.
 #' @param file Either \code{NULL} (default) or name of a file to which to save (including the file type suffix, like \code{.png} or \code{.pdf}). Specifying a PDF file is especially helpful for cases where there are many plots and multiple pages need to be made to display them.
-#' @param stacked \code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_stack}}, then using that for \code{mcmc}.
+#' @param tall \code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "tall" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_tall}}, then using that for \code{mcmc}.
 #' @param ... Arguments to pass to \code{\link[ggplot2]{ggsave}}.
 #'
 #' @return A \pkg{ggplot2} \code{ggplot} graphic object and (possibly) a file saved.
@@ -24,15 +24,15 @@ mch_trace_density <- function(
 	trace = TRUE,
 	smooth = TRUE,
 	density = TRUE,
-	nrows = 5,
-	ncols = 1,
+	nrow = 5,
+	ncol = 1,
 	file = NULL,
-	stacked = TRUE,
+	tall = TRUE,
 	...
 ) {
 
 	### compile mcmc
-	if (!stacked) mcmc <- mch_stack(mcmc)
+	if (!tall) mcmc <- mch_tall(mcmc)
 	
 	param <- mch_param(
 		param = param,
@@ -41,7 +41,7 @@ mch_trace_density <- function(
 		k = k,
 		l = l,
 		mcmc = mcmc,
-		stacked = TRUE
+		tall = TRUE
 	)
 	
 	### convert chains into tall format
@@ -91,7 +91,7 @@ mch_trace_density <- function(
 				ggplot2::facet_wrap(~param)
 				
 			if (smooth) graphs[[count_graph]] <- graphs[[count_graph]] +
-				ggplot2::geom_smooth(se=FALSE)
+				ggplot2::geom_smooth(se=FALSE, size=2)
 				
 		}
 		
@@ -119,8 +119,8 @@ mch_trace_density <- function(
 	if (length(graphs) == 1L) {
 		out <- graphs[[1L]]
 	} else {
-		nrows <- min(nrows, length(graphs))
-		out <- cowplot::plot_grid(plotlist = graphs, ncol = ncols, nrow = nrows) # byrow=FALSE --> error
+		nrow <- min(nrow, length(graphs))
+		out <- cowplot::plot_grid(plotlist = graphs, ncol = ncol, nrow = nrow) # byrow=FALSE --> error
 	}
 	
 	if (!is.null(file)) {
