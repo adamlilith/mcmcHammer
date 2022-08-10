@@ -1,8 +1,8 @@
 Package: mcmcHammer
 Type: Package
 Title: Analysis of MCMC chains
-Version: 0.0.2
-Date: 2022-07-29
+Version: 0.0.3
+Date: 2022-08-09
 Authors@R: 
 	c(
 		person(
@@ -25,7 +25,8 @@ Requires:
 	cowplot,
 	data.table,
 	ggplot2,
-	patchwork
+	patchwork,
+	rlist
 Suggests:
 	coda
 LazyData: true

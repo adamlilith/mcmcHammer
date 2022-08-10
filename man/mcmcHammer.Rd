@@ -12,17 +12,17 @@ Create an issue on \href{https://github.com/adamlilith/mcmcHammer/issues}{GitHub
 }
 \section{MCMC diagnostics}{
 
-		\code{\link{emch_trace_dens}} Trace plots and density plots \cr
+		\code{\link{emh_trace_density}} Trace plots and density plots \cr
 }
 
 \section{MCMC chain manipulation}{
 
-		\code{\link{emch_stack}} "Stack" multiple MCMC chains on one another \cr
+		\code{\link{emh_stack}} "Stack" multiple MCMC chains on one another \cr
 }
 
 \section{Helper functions}{
 
-		\code{\link{emch_param}} Create variable names (e.g., with indices) \cr
+		\code{\link{emh_param}} Create variable names (e.g., with indices) \cr
 }
 
 \author{

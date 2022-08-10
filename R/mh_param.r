@@ -14,9 +14,9 @@
 #'		\item \code{param =} a character vector and \code{j}, \code{k}, and \code{l} are a numeric vectors: Variables with the pattern "\code{beta[j, k, l]}".
 #'		\item \code{param =} a character vector and one or more of \code{j}, \code{k}, and \code{l} are a numeric vectors and/or \code{TRUE}: Variables with the pattern "\code{beta[*, k, l]}", "\code{beta[j, *, l]}", "\code{beta[j, k, *]}", "\code{beta[*, *, l]}", "\code{beta[*, k, *]}",  "\code{beta[j, *, *]}", or "\code{beta[*, *, *]}". You must supply \code{mcmc} in this case.
 #' } 
-#' @param i,j,k,l Indices used to specify variable names. Please see the help for \code{\link{mch_param}}.
-#' @param mcmc	An "tall" set of MCMC chains, \emph{or} an object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then plots this if it can.
-#' @param tall \code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "tall" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mch_tall}}, then using that for \code{mcmc}.
+#' @param i,j,k,l Indices used to specify variable names. Please see the help for \code{\link{mh_param}}.
+#' @param mcmc	An "stacked" set of MCMC chains, \emph{or} an object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then plots this if it can.
+#' @param stacked \code{FALSE}, in which case \code{mcmc} is assumed to be an object of class \code{mcmc}, \code{mcmc.list}, or a \code{list}, or \code{TRUE} (default), in which case it is a "stacked" MCMC table. This argument is usually used by other functions in this package, so can often be ignored. However, if your MCMC chains have a lot of iterations or variables, then you can speed things up by "stacking" the chains using \code{\link{mh_stack}}, then using that for \code{mcmc}.
 #'
 #' @return Character vector of variables.
 #' 
@@ -24,56 +24,56 @@
 #'
 #' # Just getting variable names:
 #' param <- 'beta'
-#' mch_param(param)
-#' mch_param(param, i=0:1)
-#' mch_param(param, j=1:2)
-#' mch_param(param, i=0:1, j=1:2)
-#' mch_param(param, j=1:2, k=1:3)
-#' mch_param(param, i=0:1, j=1:2, k=1:2)
-#' mch_param(param, j=1:2, k=1:2, l=1:2)
-#' mch_param(param, i=0:1, j=1:2, k=1:2, l=1:2)
+#' mh_param(param)
+#' mh_param(param, i=0:1)
+#' mh_param(param, j=1:2)
+#' mh_param(param, i=0:1, j=1:2)
+#' mh_param(param, j=1:2, k=1:3)
+#' mh_param(param, i=0:1, j=1:2, k=1:2)
+#' mh_param(param, j=1:2, k=1:2, l=1:2)
+#' mh_param(param, i=0:1, j=1:2, k=1:2, l=1:2)
 #'
 #' # Getting variable names that are also in the MCMC object:
 #' param <- 'beta'
-#' mch_param(param, mcmc=mcmc)
-#' mch_param(param, i=0:1, mcmc=mcmc)
-#' mch_param(param, j=1:2, mcmc=mcmc)
-#' mch_param(param, i=0:1, j=1:2, mcmc=mcmc)
-#' mch_param(param, j=1:2, k=1:3, mcmc=mcmc)
-#' mch_param(param, i=0:1, j=1:2, k=1:2, mcmc=mcmc)
-#' mch_param(param, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
-#' mch_param(param, i=0:1, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
+#' mh_param(param, mcmc=mcmc)
+#' mh_param(param, i=0:1, mcmc=mcmc)
+#' mh_param(param, j=1:2, mcmc=mcmc)
+#' mh_param(param, i=0:1, j=1:2, mcmc=mcmc)
+#' mh_param(param, j=1:2, k=1:3, mcmc=mcmc)
+#' mh_param(param, i=0:1, j=1:2, k=1:2, mcmc=mcmc)
+#' mh_param(param, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
+#' mh_param(param, i=0:1, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
 #'
 #' # Fuzzy finding of indexed variables:
-#' mch_param(param, i=TRUE, mcmc=mcmc)
-#' mch_param(param, j=TRUE, mcmc=mcmc)
-#' mch_param(param, j=TRUE, k=1:2, mcmc=mcmc)
-#' mch_param(param, j=TRUE, k=1:2, mcmc=mcmc)
+#' mh_param(param, i=TRUE, mcmc=mcmc)
+#' mh_param(param, j=TRUE, mcmc=mcmc)
+#' mh_param(param, j=TRUE, k=1:2, mcmc=mcmc)
+#' mh_param(param, j=TRUE, k=1:2, mcmc=mcmc)
 #' 
 #' @export
 
-mch_param <- function(
+mh_param <- function(
 	param,
 	i = NULL,
 	j = NULL,
 	k = NULL,
 	l = NULL,
 	mcmc = NULL,
-	tall = TRUE
+	stacked = TRUE
 ) {
 
 	### stack MCMC object
 	if (!is.null(mcmc)) {
-		if (!tall) {
-			mcmc <- mch_tall(mcmc)
-			tall <- TRUE
+		if (!stacked) {
+			mcmc <- mh_stack(mcmc)
+			stacked <- TRUE
 		}
 	}
 
 	### get variable names
 	if (is.null(param)) {
 
-		if (is.null(mcmc)) stop ('If "param" is not specified, you need to supply a "tall" MCMC object to argument "mcmc".')
+		if (is.null(mcmc)) stop ('If "param" is not specified, you need to supply a "stacked" MCMC object to argument "mcmc".')
 		param <- colnames(mcmc)
 		
 	} else {
@@ -85,10 +85,10 @@ mch_param <- function(
 			param <- character()
 			for (param_base in params_base) {
 				
-				param_this <- mch_param(
+				param_this <- mh_param(
 					param = param_base,
 					i = i, j = j, k = k, l = l,
-					mcmc = mcmc, tall = tall
+					mcmc = mcmc, stacked = stacked
 				)
 				
 				param <- c(param, param_this)
