@@ -9,7 +9,14 @@
 `mh_trace(mcmc, 'beta', i=0:2)`  
 `mh_density(mcmc, 'gamma', j=1:2, k=1:2)`  
 
-...will make trace and density plots for `beta0`, `beta1`, and `beta2`, and for `gamma[1, 1]`, `gamma[1, 2]`, `gamma[2, 1]` and `gamma[2, 2]`, respectively. These objects are in `ggplot2` package format, so they can be further manipulated using the grammar of graphics tools in that package.
+...will make trace and density plots for the `beta` variables and the `gamma` variables.  It can even do so if you can't recall how many variants of a variable there are. For example,
+
+`mh_trace(mcmc, 'beta', i=TRUE)`  
+`mh_density(mcmc, 'gamma', j=TRUE, k=TRUE)`  
+
+will make trace or density plots for all variables of the pattern `beta*` and `gamma[*, *]`.
+
+All plots are in `ggplot2` package format, so they can be further manipulated using the grammar of graphics tools in that package.
 
 ### Installation
 
