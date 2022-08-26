@@ -18,7 +18,7 @@ will make trace or density plots for all variables of the pattern `beta*` and `g
 
 All plots are in `ggplot2` package format, so they can be further manipulated using the grammar of graphics tools in that package.
 
-### Installation
+# Installation
 
 You can install `mcmcHammer` from GitHub using:
  
