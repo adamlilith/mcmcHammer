@@ -123,7 +123,7 @@ mh_trace <- function(
 			ggplot2::xlab('iteration') +
 			ggplot2::ggtitle(this_param)
 			
-		if (smooth) graphs[[count_graph]] <- graphs[[count_graph]] +
+		if (smooth) graphs[[length(graphs)]] <- graphs[[length(graphs)]] +
 			ggplot2::geom_smooth(se=FALSE, size=2)
 		
 	}
