@@ -6,16 +6,17 @@
 #'
 #' @details
 #' @section MCMC diagnostics:
-#' 		\code{\link{emh_trace_density}} Trace plots and density plots \cr
-#' 
+#' 		\code{\link{mh_trace_density}} Trace plots and density plots \cr
+#'
 #' @section MCMC chain manipulation:
-#' 		\code{\link{emh_stack}} "Stack" multiple MCMC chains on one another \cr
+#' 		\code{\link{mh_stack}} "Stack" multiple MCMC chains on one another \cr
 #'
 #' @section Helper functions:
-#' 		\code{\link{emh_param}} Create variable names (e.g., with indices) \cr
-#' 
+#' 		\code{\link{mh_param}} Create variable names (e.g., with indices) \cr
+#'
 #' @docType package
 #' @author Adam B. Smith
 #' @name mcmcHammer
-#' @keywords internal
+#' @keywords internal 
+"_PACKAGE"
 NULL
