@@ -50,16 +50,17 @@ If we hadn't stacked the chains, we could still use these functions, albeit with
 # Functions
 
 ### MCMC diagnostics and summaries
-* `mh_trace_density`: Trace plots and density plots
-* `mh_density`: Density plots
-* `mh_trace`: Trace plots
-* `mh_summary_by_param`: Calculate summary statistics for each variable
+* `mh_trace_density()`: Trace plots and density plots
+* `mh_density()`: Density plots
+* `mh_trace()`: Trace plots
+* `mh_summary_by_param()`: Calculate summary statistics for each variable
 
 ### MCMC chain manipulation
-* `mh_stack`: "Stack" multiple MCMC chains on one another
+* `mh_stack()`: "Stack" multiple MCMC chains on one another
 
 ### Helper functions
-* `mh_param` Create variable names with or without indices
+* `hammer_combine()` Combine two or more MCMC objects
+* `mh_param()` Create variable names with or without indices
 
 
 Can't touch this.

@@ -2,29 +2,44 @@
 % Please edit documentation in R/mcmcHammer.r
 \docType{package}
 \name{mcmcHammer}
+\alias{mcmcHammer-package}
 \alias{mcmcHammer}
 \title{mcmcHammer: Analysis of MCMC chains}
 \description{
-Helper functions for analyzing MCMC chains. Includes trace plots and density plots. This package automates extraction of specific parameters, including indexed coefficients such as "beta[1, 1]", "beta[1, 2]", "beta[1, 3]", and similar.
+Functions for analyzing MCMC chains. Includes trace plots and density plots. This package automates extraction of specific parameters, including indexed coefficients with names such as "\code{alpha0}", "\code{alpha1}", or "\code{beta[1, 1]}", "\code{beta[1, 2]}", "\code{beta[1, 3]}", and similar, without the user needing to, for example, use \code{paste()} to create the variable names or to remember how many \code{beta}s there were.
 }
 \details{
-Create an issue on \href{https://github.com/adamlilith/mcmcHammer/issues}{GitHub}.
+Find a bug? Please report it and how it occurred on \href{https://github.com/adamlilith/mcmcHammer/issues}{GitHub}.
+\subsection{Extracting:}{
+\itemize{
+\item \code{\link[=hammer_extract]{hammer_extract()}}: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
+\item \code{\link[=hammer_samples]{hammer_samples()}}: Extract an \code{mcmc.list} object with MCMC samples.
+\item \code{\link[=hammer_summaries]{hammer_summaries()}}: Extract an "summary" list of matrices.
+\item \code{\link[=hammer_summary]{hammer_summary()}}: Extract an "all=chains" summary matrix.
 }
-\section{MCMC diagnostics}{
-
-		\code{\link{emh_trace_density}} Trace plots and density plots \cr
-}
-
-\section{MCMC chain manipulation}{
-
-		\code{\link{emh_stack}} "Stack" multiple MCMC chains on one another \cr
 }
 
-\section{Helper functions}{
-
-		\code{\link{emh_param}} Create variable names (e.g., with indices) \cr
+\subsection{MCMC chains:}{
+\itemize{
+\item \code{\link[=hammer_combine]{hammer_combine()}}: Combine multiple \code{mcmc} and/or \code{mcmc.list} objects.
+}
 }
 
+\subsection{Helper functions:}{
+\itemize{
+\item \code{\link[=hammer_combine]{hammer_combine()}}: Combine two or more MCMC objects
+\item \code{\link[=mh_param]{mh_param()}}: Create variable names (e.g., with indices)
+}
+}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/adamlilith/mcmcHammer}
+  \item Report bugs at \url{https://github.com/adamlilith/mcmcHammer/issues}
+}
+
+}
 \author{
 Adam B. Smith
 }
