@@ -1,26 +1,47 @@
 # mcmcHammer
- Tools for analysis of MCMC chains
+ Tools for managing MCMC chains
 
 <img align="right" src="mcmcHammer.png" height="250"/>
 
- 
-`mcmcHammer` is just like all the other packages for analyzing MCMC chains from Bayesian analysis, except that it's not.  Like the others, it can create trace plots and density plots.  But unlike them, it automates "extracting" variables, especially variables with indices.  For example, say your set of MCMC chains have variables named `beta0`, `beta1`, and `beta2`, as well as `gamma[1, 1]`, `gamma[1, 2]`, `gamma[2, 1]` and `gamma[2, 2]`. You can easily create trace plots and density plots for each of these with minimal "manual" tweaking of variable names. Perforce:
- 
-`mh_trace(mcmc, 'beta', i=0:2)`  
-`mh_density(mcmc, 'gamma', j=1:2, k=1:2)`  
+**mcmcHammer** is a "helper" package for working with Monte Carlo Markov Chain objects produced by popular Bayesian **R** packages like **rstan**, **rjags**, and **nimble**. These package produce `list` objects that have this kind of structure:
 
-...will make trace and density plots for the `beta` variables and the `gamma` variables.  It can even do so if you can't recall how many variants of a variable there are. For example,
+```
+mcmc$samples
+mcmc$samples$chain1 <matrix of posterior samples, one per MCMCiteration>
+mcmc$samples$chain2 <matrix of posterior samples, one per MCMCiteration>
+mcmc$samples$chain3 <matrix of posterior samples, one per MCMCiteration>
+mcmc$samples$chain4 <matrix of posterior samples, one per MCMCiteration>
+mcmc$summary
+mcmc$summary$chain1 <matrix of summary statistics for chain 1>
+mcmc$summary$chain2 <matrix of summary statistics for chain 2>
+mcmc$summary$chain3 <matrix of summary statistics for chain 3>
+mcmc$summary$chain4 <matrix of summary statistics for chain 4>
+mcmc$summary$all.chains <matrix of summary statistics for all chains>
+```
 
-`mh_trace(mcmc, 'beta', i=TRUE)`  
-`mh_density(mcmc, 'gamma', j=TRUE, k=TRUE)`  
+Functions in this package do *not* create plots or calculate statistics. Rather, its specialty is making extraction of posteriors, and subsetting chains and components of MCMC objects easy (no regex expressions, no need to do `paste(beta[', 1:207, '])'`, etc.).
 
-will make trace or density plots for all variables of the pattern `beta*` and `gamma[*, *]`.
+As an example example, assume your set of MCMC chains have variables named `beta0`, `beta1`, and `beta2`, as well as `gamma[1, 1]`, `gamma[1, 2]`, `gamma[2, 1]` and `gamma[2, 2]`, in addition to thousands of other variables. You can easily subset the chains to just these variables:
 
-All plots are in `ggplot2` package format, so they can be further manipulated using the grammar of graphics tools in that package.
+`hammer_subset(mcmc, 'beta', i = 0:2)`  
+`hammer_subset(mcmc, 'gamma', j = 1:2, k = 1:2)`  
+
+If you don't recall how many of each variable there are, you can use `TRUE` to indicate all of the relevant variables:
+
+`hammer_subset(mcmc, 'beta', i = TRUE)`  
+`hammer_subset(mcmc, 'gamma', j = TRUE, k = TRUE)`  
+
+To get the posterior mean, median, or quantiles, you can use the `hammer_extract()` function. For example, if you want to extract the posterior mean or median of the `beta` variables, you can do so with:
+
+`hammer_extract(mcmc, 'beta', i = 0:2) # means (default)`  
+`hammer_extract(mcmc, 'beta', i = 0:2, stat = 'lower') # lower value of inner 95th quantile`  
+`hammer_extract(mcmc, 'beta', i = 0:2, stat = 'upper') # upper value of inner 95th quantile`  
+
+In all of the functions, you can use the shortcut (like `i = TRUE`) if you don't remember how many `beta` variables there are.
 
 # Installation
 
-You can install `mcmcHammer` from GitHub using:
+You can install **mcmcHammer** from GitHub using:
  
 `remotes::install_github('adamlilith/mcmcHammer', dependencies=TRUE)`  
 
@@ -30,39 +51,25 @@ You may need to install the `remotes` package first, using:
 
 # Usage
 
-Most function require either an object of class `mcmc` or `mcmc.list`, which are often the format of output from modeling functions in Bayesian packages. However, they can also be created by the `coda` package. Functions in `mcmcHammer` will need to "stack" `mcmc` objects before they can be used. Here, a "stack" is the product of simply `rbind`-ing one `mcmc` matrix on top of the next. Stacking can be done automatically by each function if the argument `stacked` is `FALSE`, but if you are using the functions a lot, it's easier and often much faster to stack the `mcmc` chains first then use this as the input into functions:
-
-`library(mcmcHammer)`  
-`data(mcmc)`
-
-`mcmc_stacked <- mh_stack(mcmc)`
-
-Now, we can call summary and diagnostic functions with the stacked version of the MCMC chains:
-
-`mh_trace_density(mcmc_stacked, param='beta', i=0:5)`  
-`mh_summary_by_param(mcmc_stacked, fun=mean, param='gamma', j=1:2, k=1:2)`
-
-If we hadn't stacked the chains, we could still use these functions, albeit with some overhead:
-
-`mh_trace_density(mcmc, param='beta', i=0:5, stacked=FALSE)`  
-`mh_summary_by_param(mcmc, fun=mean, param='gamma', j=1:2, k=1:2, stacked=FALSE)`
+Most function require either an object of class `mcmc` or `mcmc.list`, which are often the format of output from modeling functions in Bayesian packages. However, they can also be created by the `coda` package. 
 
 # Functions
 
-### MCMC diagnostics and summaries
-* `mh_trace_density()`: Trace plots and density plots
-* `mh_density()`: Density plots
-* `mh_trace()`: Trace plots
-* `mh_summary_by_param()`: Calculate summary statistics for each variable
+All functions begin with `hammer_` to assist finding them with automated code-completion.
+
+### Extraction and subsetting
+* `hammer_extract()`: Posterior summary statistics (mean, median, S.D., lower/upper quantiles).
+* `hammer_samples()`: Get the "samples" part of an MCMC list.
+* `hammer_summaries()`: Get the by-chain summary from an MCMC list.
+* `hammer_summary()`: Get the "`all.chains`" summary from an MCMC list.
+* `hammer_subset()`: Subset MCMC chains by variable name and/or index.
 
 ### MCMC chain manipulation
-* `mh_stack()`: "Stack" multiple MCMC chains on one another
+* `hammer_combine()`: Combine two or more MCMC objects and calculate new summary statistics.
+* `hammer_rbind()`: "Stack" MCMC chains into a single matrix.
 
 ### Helper functions
-* `hammer_combine()` Combine two or more MCMC objects
-* `mh_param()` Create variable names with or without indices
+* `hammer_param()`: Match variables names to MCMC columns.
+* `hammer_resummary()`: Per-chain and all-chains summary matrices.
 
-
-Can't touch this.
-
-~ Adam ~
+*Can't touch this.*

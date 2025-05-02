@@ -19,38 +19,30 @@
 #' @returns Character vector of variables.
 #' @examples
 #'
-#' data(mcmc)
-#'
-#' # Just getting variable names:
-#' param <- 'beta'
+#' # Just making variable names:
+#' param <- 'gamma'
 #' hammer_param(param)
-#' hammer_param(param, i=0:1)
-#' hammer_param(param, j=1:2)
-#' hammer_param(param, i=0:1, j=1:2)
-#' hammer_param(param, j=1:2, k=1:3)
-#' hammer_param(param, i=0:1, j=1:2, k=1:2)
-#' hammer_param(param, j=1:2, k=1:2, l=1:2)
-#' hammer_param(param, i=0:1, j=1:2, k=1:2, l=1:2)
+#' hammer_param(param, i = 0:1)
+#' hammer_param(param, j = 1:2)
+#' hammer_param(param, i = 0:1, j = 1:2)
+#' hammer_param(param, j = 1:2, k = 1:3)
+#' hammer_param(param, i = 0:1, j = 1:2, k = 1:2)
+#' hammer_param(param, j = 1:2, k = 1:2, l = 1:2)
+#' hammer_param(param, i = 0:1, j = 1:2, k = 1:2, l = 1:2)
 #'
 #' # Getting variable names that are also in the MCMC object:
+#' data(mcmc)
 #' param <- 'beta'
-#' hammer_param(param, mcmc=mcmc)
-#' hammer_param(param, i=0:1, mcmc=mcmc)
-#' hammer_param(param, j=1:2, mcmc=mcmc)
-#' hammer_param(param, i=0:1, j=1:2, mcmc=mcmc)
-#' hammer_param(param, j=1:2, k=1:3, mcmc=mcmc)
-#' hammer_param(param, i=0:1, j=1:2, k=1:2, mcmc=mcmc)
-#' hammer_param(param, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
-#' hammer_param(param, i=0:1, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
+#' hammer_param(param = NULL, mcmc = mcmc) # all variables
+#' hammer_param(param, j = 3:4, mcmc = mcmc)
 #'
 #' # Fuzzy finding of indexed variables:
-#' hammer_param(param, i=TRUE, mcmc=mcmc)
-#' hammer_param(param, j=TRUE, mcmc=mcmc)
-#' hammer_param(param, j=TRUE, k=1:2, mcmc=mcmc)
-#' hammer_param(param, j=TRUE, k=1:2, mcmc=mcmc)
+#' hammer_param('beta', i = TRUE, mcmc = mcmc) # none with names beta0, etc.
+#' hammer_param('beta', j = TRUE, mcmc = mcmc)
+#' hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
+#' hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
 #' 
 #' @export
-
 hammer_param <- function(
 	param,
 	i = NULL,
@@ -72,12 +64,17 @@ hammer_param <- function(
 
 	}
 
+	if (!inherits(mcmc, 'mcmc.list')) {
+		mcmc_samples <- hammer_samples(mcmc, fail = TRUE)
+	} else {
+		mcmc_samples <- mcmc
+	}
+
 	### get variable names
 	if (is.null(param)) {
 
-		if (!is.null(mcmc))	{
-			mcmc <- hammer_extract_samples(mcmc)
-			param <- colnames(mcmc[[1]])
+		if (!is.null(mcmc_samples))	{
+			param <- colnames(mcmc_samples[[1]])
 		} else {
 			stop('Both `param` and `mcmc` are NULL. Please provide one or the other, or both.')
 		}
@@ -94,7 +91,7 @@ hammer_param <- function(
 				param_this <- hammer_param(
 					param = param_base,
 					i = i, j = j, k = k, l = l,
-					mcmc = mcmc
+					mcmc = mcmc_samples
 				)
 				
 				param <- c(param, param_this)
@@ -104,11 +101,15 @@ hammer_param <- function(
 		### just one parameter
 		} else {
 			
+			if (is.logical(j) & is.logical(k)) {
+				warning('Extracting variable names can take a long time if at least two of `j`, `k`, and `l` are logical. Consider using numeric indices instead.')
+			}
+
 			### get indices
-			i <- .get_indices(id = i, mcmc = mcmc)
-			j <- .get_indices(id = j, mcmc = mcmc)
-			k <- .get_indices(id = k, mcmc = mcmc)
-			l <- .get_indices(id = l, mcmc = mcmc)
+			i <- .get_indices(id = i, mcmc_samples = mcmc_samples)
+			j <- .get_indices(id = j, mcmc_samples = mcmc_samples)
+			k <- .get_indices(id = k, mcmc_samples = mcmc_samples)
+			l <- .get_indices(id = l, mcmc_samples = mcmc_samples)
 			
 			len_i <- length(i)
 			len_j <- length(j)
@@ -116,23 +117,22 @@ hammer_param <- function(
 			len_l <- length(l)
 			
 			### get candidate variable names
-			if (!is.null(i)) param <-
-				paste0(rep(param, len_i), i)
+			if (!is.null(i)) param <- paste0(rep(param, len_i), i)
 
 			if (!is.null(j) & is.null(k)) {
 			
 				indices <- expand.grid(param = param, j = j)
-				param <- paste0(indices$param, '[', indices$j, ']')
+				params <- paste0(indices$param, '[', indices$j, ']')
 					
 			} else if (!is.null(j) & !is.null(k) & is.null(l)) {
 				
 				indices <- expand.grid(param = param, j = j, k = k)
-				param <- paste0(indices$param, '[', indices$j, ', ', indices$k, ']')
+				params <- paste0(indices$param, '[', indices$j, ', ', indices$k, ']')
 
 			} else if (!is.null(j) & !is.null(k) & !is.null(l)) {
 
 				indices <- expand.grid(param = param, j = j, k = k, l = l)
-				param <- paste0(indices$param, '[', indices$j, ', ', indices$k, ', ', indices$l, ']')
+				params <- paste0(indices$param, '[', indices$j, ', ', indices$k, ', ', indices$l, ']')
 			
 			}
 			
@@ -141,31 +141,32 @@ hammer_param <- function(
 	} # if user-specified column names
 	
 	# valid names?
-	if (!is.null(mcmc)) {
-		if (length(mcmc) > 0) {
-			param <- param[param %in% colnames(mcmc[[1]])]
+	if (!is.null(mcmc_samples)) {
+		cols <- colnames(mcmc_samples[[1]])
+		if (length(mcmc_samples) > 0) {
+			params <- params[params %in% cols]
 		} else {
-			param <- param[param %in% colnames(mcmc)]
+			params <- params[params %in% cols]
 		}
 	}
 	
-	param
+	params
 	
 }
 
 ### get indices
-.get_indices <- function(id, mcmc) {
+.get_indices <- function(id, mcmc_samples) {
 
 	# id		i, j, k, or l
-	# mcmc		MCMC matrix
+	# mcmc_samples		MCMC matrix
 
 	if (!is.null(id)) {
 		if (inherits(id, 'logical')) {
 			if (id) {
-				if (length(mcmc) > 0) {
-					id <- 0L:ncol(mcmc[[1]])
+				if (inherits(mcmc_samples, 'mcmc.list')) {
+					id <- 0L:ncol(mcmc_samples[[1]])
 				} else {
-					id <- 0L:ncol(mcmc)
+					id <- 0L:ncol(mcmc_samples)
 				}
 			} else {
 				id <- NULL

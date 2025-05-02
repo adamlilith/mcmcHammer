@@ -34,34 +34,27 @@ This function automates finding of indexed variable in an MCMC object. These inc
 }
 \examples{
 
-data(mcmc)
-
-# Just getting variable names:
-param <- 'beta'
+# Just making variable names:
+param <- 'gamma'
 hammer_param(param)
-hammer_param(param, i=0:1)
-hammer_param(param, j=1:2)
-hammer_param(param, i=0:1, j=1:2)
-hammer_param(param, j=1:2, k=1:3)
-hammer_param(param, i=0:1, j=1:2, k=1:2)
-hammer_param(param, j=1:2, k=1:2, l=1:2)
-hammer_param(param, i=0:1, j=1:2, k=1:2, l=1:2)
+hammer_param(param, i = 0:1)
+hammer_param(param, j = 1:2)
+hammer_param(param, i = 0:1, j = 1:2)
+hammer_param(param, j = 1:2, k = 1:3)
+hammer_param(param, i = 0:1, j = 1:2, k = 1:2)
+hammer_param(param, j = 1:2, k = 1:2, l = 1:2)
+hammer_param(param, i = 0:1, j = 1:2, k = 1:2, l = 1:2)
 
 # Getting variable names that are also in the MCMC object:
+data(mcmc)
 param <- 'beta'
-hammer_param(param, mcmc=mcmc)
-hammer_param(param, i=0:1, mcmc=mcmc)
-hammer_param(param, j=1:2, mcmc=mcmc)
-hammer_param(param, i=0:1, j=1:2, mcmc=mcmc)
-hammer_param(param, j=1:2, k=1:3, mcmc=mcmc)
-hammer_param(param, i=0:1, j=1:2, k=1:2, mcmc=mcmc)
-hammer_param(param, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
-hammer_param(param, i=0:1, j=1:2, k=1:2, l=1:2, mcmc=mcmc)
+hammer_param(param = NULL, mcmc = mcmc) # all variables
+hammer_param(param, j = 3:4, mcmc = mcmc)
 
 # Fuzzy finding of indexed variables:
-hammer_param(param, i=TRUE, mcmc=mcmc)
-hammer_param(param, j=TRUE, mcmc=mcmc)
-hammer_param(param, j=TRUE, k=1:2, mcmc=mcmc)
-hammer_param(param, j=TRUE, k=1:2, mcmc=mcmc)
+hammer_param('beta', i = TRUE, mcmc = mcmc) # none with names beta0, etc.
+hammer_param('beta', j = TRUE, mcmc = mcmc)
+hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
+hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
 
 }

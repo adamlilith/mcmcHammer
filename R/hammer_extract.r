@@ -21,8 +21,11 @@
 #'
 #' @examples
 #'
-#' @aliases hammer_extract
-#' @rdname hammer_extract
+#' data(mcmc)
+#' hammer_extract(mcmc, param = 'beta', j = 1:3)
+#' hammer_extract(mcmc, param = 'beta', j = 1:3, stat = 'median')
+#' hammer_extract(mcmc, param = 'z_hat', j = TRUE, k = TRUE)
+#'
 #' @export hammer_extract
 hammer_extract <- function(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, stat = 'mean') {
 
@@ -37,19 +40,20 @@ hammer_extract <- function(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, 
 	}
 
 	mcmc_summary <- hammer_summary(mcmc, fail = TRUE)
-	params <- hammer_param(param, i = i, j = j, k = k, l = l, mcmc = mcmc_samples)
+	params <- hammer_param(param, i = i, j = j, k = k, l = l, mcmc = mcmc)
 
+	stat <- tolower(stat)
 	stat <- omnibus::pmatchSafe(stat, c('mean', 'median', 'sd', 'lower', 'upper'), nmax = 1)
 
-	if (stats == 'mean') {
+	if (stat == 'mean') {
 		out <- mcmc_summary[params, 'Mean', drop = TRUE]
-	} else if (stats == 'median') {
+	} else if (stat == 'median') {
 		out <- mcmc_summary[params, 'Median', drop = TRUE]
-	} else if (stats == 'sd') {
+	} else if (stat == 'sd') {
 		out <- mcmc_summary[params, 'St.Dev.', drop = TRUE]
-	} else if (stats == 'lower') {
+	} else if (stat == 'lower') {
 		out <- mcmc_summary[params, '95%CI_low', drop = TRUE]
-	} else if (stats == 'upper') {
+	} else if (stat == 'upper') {
 		out <- mcmc_summary[params, '95%CI_upp', drop = TRUE]
 	} else {
 		stop('Invalid value for `stat`.')

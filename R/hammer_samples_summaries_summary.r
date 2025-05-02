@@ -12,6 +12,11 @@
 #'
 #' @examples
 #'
+#' data(mcmc)
+#' str(hammer_samples(mcmc))
+#' str(hammer_summaries(mcmc))
+#' hammer_summary(mcmc)
+#'
 #' @aliases hammer_samples
 #' @rdname hammer_samples
 #' @export hammer_samples
