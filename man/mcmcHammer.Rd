@@ -10,25 +10,33 @@ Functions for analyzing MCMC chains. Includes trace plots and density plots. Thi
 }
 \details{
 Find a bug? Please report it and how it occurred on \href{https://github.com/adamlilith/mcmcHammer/issues}{GitHub}.
-\subsection{Extracting:}{
+\subsection{Extraction and subsetting}{
 \itemize{
 \item \code{\link[=hammer_extract]{hammer_extract()}}: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
 \item \code{\link[=hammer_samples]{hammer_samples()}}: Extract an \code{mcmc.list} object with MCMC samples.
 \item \code{\link[=hammer_summaries]{hammer_summaries()}}: Extract an "summary" list of matrices.
 \item \code{\link[=hammer_summary]{hammer_summary()}}: Extract an "all=chains" summary matrix.
+\item \code{\link[=hammer_subset]{hammer_subset()}}: Subset MCMC chains by variable name and/or index.
 }
 }
 
-\subsection{MCMC chains:}{
+\subsection{MCMC chain manipulation}{
 \itemize{
-\item \code{\link[=hammer_combine]{hammer_combine()}}: Combine multiple \code{mcmc} and/or \code{mcmc.list} objects.
+\item hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
+\item \code{\link[=hammer_rbind]{hammer_rbind()}}: "Stack" MCMC chains into a single matrix.
 }
 }
 
 \subsection{Helper functions:}{
 \itemize{
-\item \code{\link[=hammer_combine]{hammer_combine()}}: Combine two or more MCMC objects
-\item \code{\link[=mh_param]{mh_param()}}: Create variable names (e.g., with indices)
+\item \code{\link[=hammer_param]{hammer_param()}}: Match variables names to MCMC columns.
+\item \code{\link[=hammer_resummarize]{hammer_resummarize()}}: Per-chain and all-chains summary matrices.
+}
+}
+
+\subsection{Example data}{
+\itemize{
+\item \code{mcmc}: An "MCMC \code{list}" similar to output from \strong{rstan}, \strong{rjags}, and \strong{nimble}.
 }
 }
 }

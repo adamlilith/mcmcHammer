@@ -35,10 +35,9 @@ Often, MCMC chains contain columns for parameters that we do not want to examine
 \examples{
 
 data(mcmc)
-hammer_head(mcmc, 1)
 
-params  <- 'beta'
-subsetted <- hammer_subset(mcmc, params)
-hammer_head(subsetted, 1)
+param  <- 'alpha'
+subsetted <- hammer_subset(mcmc, param, i = TRUE)
+head(subsetted)
 
 }

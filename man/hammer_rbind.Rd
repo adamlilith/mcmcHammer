@@ -17,3 +17,11 @@ Matrix.
 \description{
 This function takes an \code{mcmc.list} and \code{rbind()}'s' them onto one another to create a single, large matrix.
 }
+\examples{
+
+data(mcmc)
+rbinded <- hammer_rbind(mcmc)
+head(rbinded)
+dim(rbinded)
+
+}

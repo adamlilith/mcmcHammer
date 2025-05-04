@@ -12,8 +12,11 @@
 #'
 #' @examples
 #'
-#' @aliases hammer_samples
-#' @rdname hammer_samples
+#' data(mcmc)
+#' str(hammer_samples(mcmc))
+#' str(hammer_summaries(mcmc))
+#' hammer_summary(mcmc)
+#'
 #' @export hammer_samples
 hammer_samples <- function(mcmc, fail = TRUE) {
 

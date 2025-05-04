@@ -40,3 +40,11 @@ An \code{mcmc.list} object or a \code{list}.
 \description{
 Extracts posterior mean, median, standard deviation, or quantiles from an \code{mcmc} or \code{mcmc.list} object.
 }
+\examples{
+
+data(mcmc)
+hammer_extract(mcmc, param = 'beta', j = 1:3)
+hammer_extract(mcmc, param = 'beta', j = 1:3, stat = 'median')
+hammer_extract(mcmc, param = 'z_hat', j = TRUE, k = TRUE)
+
+}

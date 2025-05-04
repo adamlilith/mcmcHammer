@@ -8,11 +8,18 @@
 #'
 #' @returns Matrix.
 #'
+#' @examples
+#' 
+#' data(mcmc)
+#' rbinded <- hammer_rbind(mcmc)
+#' head(rbinded)
+#' dim(rbinded)
+#'
 #' @rdname hammer_rbind
 #' @export
 hammer_rbind <- function(mcmc, chains = FALSE) {
 
-	mcmc_chains <- hammer_extract_samples(mcmc, fail = TRUE)
+	mcmc_chains <- hammer_samples(mcmc, fail = TRUE)
 
 	out <- mcmc_chains[[1]]
 	if (chains) {

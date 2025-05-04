@@ -5,18 +5,23 @@
 #' Find a bug? Please report it and how it occurred on [GitHub](https://github.com/adamlilith/mcmcHammer/issues).
 #'
 #' @details
-#' ## Extracting:
-#'  * [hammer_extract()]: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
-#'  * [hammer_samples()]: Extract an `mcmc.list` object with MCMC samples.
-#'  * [hammer_summaries()]: Extract an "summary" list of matrices.
-#'  * [hammer_summary()]: Extract an "all=chains" summary matrix.
-#'
-#' ## MCMC chains:
-#'  * [hammer_combine()]: Combine multiple `mcmc` and/or `mcmc.list` objects.
+#' ## Extraction and subsetting
+#' * [hammer_extract()]: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
+#' * [hammer_samples()]: Extract an `mcmc.list` object with MCMC samples.
+#' * [hammer_summaries()]: Extract an "summary" list of matrices.
+#' * [hammer_summary()]: Extract an "all=chains" summary matrix.
+#' *  [hammer_subset()]: Subset MCMC chains by variable name and/or index.
+
+#' ## MCMC chain manipulation
+#' * hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
+#' * [hammer_rbind()]: "Stack" MCMC chains into a single matrix.
 #'
 #' ## Helper functions:
-#'  * [hammer_combine()]: Combine two or more MCMC objects
-#'  * [mh_param()]: Create variable names (e.g., with indices)
+#' * [hammer_param()]: Match variables names to MCMC columns.
+#' * [hammer_resummarize()]: Per-chain and all-chains summary matrices.
+#'
+#' ## Example data
+#' * `mcmc`: An "MCMC `list`" similar to output from **rstan**, **rjags**, and **nimble**.
 #'
 #' @author Adam B. Smith
 #' @name mcmcHammer

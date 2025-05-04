@@ -22,11 +22,10 @@
 #' @examples
 #'
 #' data(mcmc)
-#' hammer_head(mcmc, 1)
 #' 
-#' params  <- 'beta'
-#' subsetted <- hammer_subset(mcmc, params)
-#' hammer_head(subsetted, 1)
+#' param  <- 'alpha'
+#' subsetted <- hammer_subset(mcmc, param, i = TRUE)
+#' head(subsetted)
 #'
 #' @export
 hammer_subset <- function(
@@ -36,7 +35,7 @@ hammer_subset <- function(
 	j = NULL,
 	k = NULL,
 	l = NULL,
-	keep = TRUE	
+	keep = TRUE
 ) {
 
 	if (FALSE) {
@@ -50,35 +49,35 @@ hammer_subset <- function(
 	}
 
 	mcmc_samples <- hammer_samples(mcmc)
-	mcmc_summary <- hammer_summary(mcmc, fail = FALSE)
+	mcmc_summaries <- hammer_summaries(mcmc, fail = FALSE)
 
-	params <- hammer_param(param, i = i, j = j, k = k, l = l, mcmc = mcmc_samples)
+	params <- hammer_param(param, i = i, j = j, k = k, l = l, mcmc)
 
 	n_chains <- length(mcmc_samples)
+	cnames <- colnames(mcmc_samples[[1]])
 	for (n_chain in 1:n_chains) {
 		if (keep) {
 			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , params, drop = FALSE]
 		} else {
-			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , !(nc %in% params), drop = FALSE]
+			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , !(cnames %in% params), drop = FALSE]
 		}
 	}
 
-	if (!is.null(mcmc_summary)) {
-		n <- length(mcmc_summary)
+	if (!is.null(mcmc_summaries)) {
+		n <- length(mcmc_summaries)
+		cnames <- colnames(mcmc_samples[[1]])
 		for (n_chain in 1:n) {
 			if (keep) {
-				mcmc_summary[[n_chain]] <- mcmc_summary[[n_chain]][params, , drop = FALSE]
+				mcmc_summaries[[n_chain]] <- mcmc_summaries[[n_chain]][params, , drop = FALSE]
 			} else {
-				mcmc_summary[[n_chain]] <- mcmc_summary[[n_chain]][!(nc %in% params), , drop = FALSE]
+				mcmc_summaries[[n_chain]] <- mcmc_summaries[[n_chain]][!(cnames %in% params), , drop = FALSE]
 			}
 		}
 	}
 
-	out <- list(
+	list(
 		samples = mcmc_samples,
-		summary = mcmc_summary
+		summary = mcmc_summaries
 	)
-
-	out
 
 }
