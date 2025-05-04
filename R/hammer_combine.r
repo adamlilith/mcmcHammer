@@ -23,8 +23,7 @@
 #' @examples
 #'
 #' data(mcmc)
-#' mcmc2 <- mcmc # make a copy so we can combine them
-#' combo <- hammer_combine(mcmc, mcmc2)
+#' combo <- hammer_combine(mcmc, mcmc) # combine "mcmc" with itself
 #' str(combo, 2)
 #'
 #' @export
@@ -32,29 +31,24 @@ hammer_combine <- function(...) {
 
 	x <- list(...)
 	
-	if (!is.list(x[[1]])) stop('Input must be a list.')
-	
 	# add first object
 	# single chain... first object is an mcmc
-	if (inherits(x[[1]]$samples, 'mcmc')) {
+	if (inherits(x[[1]][[1]], 'mcmc')) {
 		
 		out <- list()
 		out$samples$chain1 <- x[[1]]$samples
-		out$summary$chain1 <- x[[1]]$summary
 	
-	} else if (inherits(x[[1]]$samples, 'mcmc.list')) {
+	} else if (inherits(x[[1]][[1]], 'mcmc.list')) {
 	
 		out <- x[[1]]
 		n_chains_out <- length(out$samples)
 		names(out$samples) <- paste0('chain', 1:n_chains_out)
-		names(out$summary)[1:n_chains_out] <- paste0('chain', 1:n_chains_out)
 
 	} else {
 		stop('Input must be a list which has two top elements, one named `samples` with either an `mcmc` or `mcmc.list` object, and the other named `summary` with a list of summary matrices.')
 	}
 	
-	if (any(names(out$summary) == 'all.chains')) out$summary$all.chains <- NULL
-	n_hats <- ncol(out$samples$chain1)
+	n_vars <- ncol(out$samples$chain1)
 	n_iter <- nrow(out$samples$chain1)
 
 	# add subsequent objects
@@ -67,9 +61,9 @@ hammer_combine <- function(...) {
 		for (i in 2:length_input) {
 			
 			# next input is just an mcmc
-			if (inherits(x[[i]]$samples, 'mcmc')) {
+			if (inherits(x[[i]][[1]], 'mcmc')) {
 				
-				if (ncol(x[[i]]$samples) != n_hats) stop('Input has unequal number of columns. Are these from the same MCMC model?')
+				if (ncol(x[[i]]$samples) != n_vars) stop('Input has unequal number of columns. Are these from the same MCMC model?')
 				if (nrow(x[[i]]$samples) != n_iter) stop('Input has unequal number of iterations. Are these from the same MCMC model?')
 				
 				new_names <- colnames(x[[i]]$samples)
@@ -83,23 +77,21 @@ hammer_combine <- function(...) {
 				names(out$summary)[length(out$summary)] <- paste0('chain', n_chains_out)
 			
 			# next input is an mcmc.list
-			} else if (inherits(x[[i]]$samples, 'mcmc.list')) {
+			} else if (inherits(x[[i]][[1]], 'mcmc.list')) {
 			
 				n_chains_in <- length(x[[i]]$samples)
 				for (j in 1:n_chains_in) {
 				
-					if (ncol(x[[i]]$samples[[j]]) != n_hats) stop('Input has unequal number of columns.')
-					if (nrow(x[[i]]$samples[[j]]) != n_iter) stop('Input has unequal number of iterations.')
+					if (ncol(x[[i]][[1]][[j]]) != n_vars) stop('Input has unequal number of columns.')
+					if (nrow(x[[i]][[1]][[j]]) != n_iter) stop('Input has unequal number of iterations.')
 
 					new_names <- colnames(x[[i]]$samples[[j]])
 					if (any(out_names != new_names)) stop('Column names do not match across objects. Are these from the same MCMC model?')
 
 					out$samples$TEMP <- x[[i]]$samples[[j]]
-					out$summary$TEMP <- x[[i]]$summary[[j]]
 
 					n_chains_out <- n_chains_out + 1
 					names(out$samples)[length(out$samples)] <- paste0('chain', n_chains_out)
-					names(out$summary)[length(out$summary)] <- paste0('chain', n_chains_out)
 				
 				}
 			
@@ -111,20 +103,8 @@ hammer_combine <- function(...) {
 	
 	}
 	
-	# summary
-	out$summary$all.chains <- NA_real_ * out$summary[[1]]
-	
-	stack <- do.call('rbind', out$samples)
-	row_sums <- rowSums(stack)
-	nas <- anyNA(row_sums)
-	if (nas) warning('Some MCMC samples are NA.')
-	
-	out$summary$all.chains[ , 'Mean'] <- colMeans(stack)
-	out$summary$all.chains[ , 'Median'] <- apply(stack, 2, median)
-	out$summary$all.chains[ , 'St.Dev.'] <- apply(stack, 2, sd)
-	out$summary$all.chains[ , '95%CI_low'] <- apply(stack, 2, quantile, 0.025, na.rm = TRUE)
-	out$summary$all.chains[ , '95%CI_upp'] <- apply(stack, 2, quantile, 0.975, na.rm = TRUE)
-
+	summaries <- hammer_resummarize(out)
+	out$summary <- summaries
 	out
 
 }

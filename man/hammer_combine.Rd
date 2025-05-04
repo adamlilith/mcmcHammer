@@ -33,8 +33,7 @@ Sometimes, you need to run different MCMC chains in different instances of \stro
 \examples{
 
 data(mcmc)
-mcmc2 <- mcmc # make a copy so we can combine them
-combo <- hammer_combine(mcmc, mcmc2)
+combo <- hammer_combine(mcmc, mcmc) # combine "mcmc" with itself
 str(combo, 2)
 
 }

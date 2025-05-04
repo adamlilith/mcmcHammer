@@ -54,21 +54,23 @@ hammer_subset <- function(
 	params <- hammer_param(param, i = i, j = j, k = k, l = l, mcmc)
 
 	n_chains <- length(mcmc_samples)
+	cnames <- colnames(mcmc_samples[[1]])
 	for (n_chain in 1:n_chains) {
 		if (keep) {
 			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , params, drop = FALSE]
 		} else {
-			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , !(nc %in% params), drop = FALSE]
+			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , !(cnames %in% params), drop = FALSE]
 		}
 	}
 
 	if (!is.null(mcmc_summaries)) {
 		n <- length(mcmc_summaries)
+		cnames <- colnames(mcmc_samples[[1]])
 		for (n_chain in 1:n) {
 			if (keep) {
 				mcmc_summaries[[n_chain]] <- mcmc_summaries[[n_chain]][params, , drop = FALSE]
 			} else {
-				mcmc_summaries[[n_chain]] <- mcmc_summaries[[n_chain]][!(nc %in% params), , drop = FALSE]
+				mcmc_summaries[[n_chain]] <- mcmc_summaries[[n_chain]][!(cnames %in% params), , drop = FALSE]
 			}
 		}
 	}

@@ -13,12 +13,15 @@
 #' *  [hammer_subset()]: Subset MCMC chains by variable name and/or index.
 
 #' ## MCMC chain manipulation
-#' hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
-#' [hammer_rbind()]: "Stack" MCMC chains into a single matrix.
+#' * hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
+#' * [hammer_rbind()]: "Stack" MCMC chains into a single matrix.
 #'
 #' ## Helper functions:
-#' [hammer_param()]: Match variables names to MCMC columns.
-#' [hammer_resummary()]: Per-chain and all-chains summary matrices.
+#' * [hammer_param()]: Match variables names to MCMC columns.
+#' * [hammer_resummarize()]: Per-chain and all-chains summary matrices.
+#'
+#' ## Example data
+#' * `mcmc`: An "MCMC `list`" similar to output from **rstan**, **rjags**, and **nimble**.
 #'
 #' @author Adam B. Smith
 #' @name mcmcHammer

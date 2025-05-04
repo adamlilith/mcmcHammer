@@ -16,11 +16,11 @@
 #' @examples
 #'
 #' data(mcmc)
-#' summ <- hammer_resummary(mcmc)
+#' summ <- hammer_resummarize(mcmc)
 #' str(summ)
 #'
 #' @export
-hammer_resummary <- function(mcmc) {
+hammer_resummarize <- function(mcmc) {
 
 	if (inherits(mcmc, 'mcmc')) {
 		mcmc <- list(list(mcmc))
@@ -39,10 +39,10 @@ hammer_resummary <- function(mcmc) {
 		out[[n_chain]] <- matrix(NA_real_, nrow = n_vars, ncol = 5, dimnames = list(vars, c('Mean', 'Median', 'St.Dev.', '95%CI_low', '95%CI_upp')))
 
 		out[[n_chain]][ , 'Mean'] <- colMeans(mcmc[[1]][[n_chain]])
-		out[[n_chain]][ , 'Median'] <- apply(mcmc[[1]][[n_chain]], 2, median)
-		out[[n_chain]][ , 'St.Dev.'] <- apply(mcmc[[1]][[n_chain]], 2, sd)
-		out[[n_chain]][ , '95%CI_low'] <- apply(mcmc[[1]][[n_chain]], 2, quantile, 0.025)
-		out[[n_chain]][ , '95%CI_upp'] <- apply(mcmc[[1]][[n_chain]], 2, quantile, 0.975)
+		out[[n_chain]][ , 'Median'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::median)
+		out[[n_chain]][ , 'St.Dev.'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::sd)
+		out[[n_chain]][ , '95%CI_low'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::quantile, 0.025)
+		out[[n_chain]][ , '95%CI_upp'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::quantile, 0.975)
 
 	
 	}
@@ -56,10 +56,10 @@ hammer_resummary <- function(mcmc) {
 	if (nas) warning('Some MCMC samples are NA.')
 	
 	out$all.chains[ , 'Mean'] <- colMeans(stack)
-	out$all.chains[ , 'Median'] <- apply(stack, 2, median)
-	out$all.chains[ , 'St.Dev.'] <- apply(stack, 2, sd)
-	out$all.chains[ , '95%CI_low'] <- apply(stack, 2, quantile, 0.025, na.rm = TRUE)
-	out$all.chains[ , '95%CI_upp'] <- apply(stack, 2, quantile, 0.975, na.rm = TRUE)
+	out$all.chains[ , 'Median'] <- apply(stack, 2, FUN = stats::median)
+	out$all.chains[ , 'St.Dev.'] <- apply(stack, 2, FUN = stats::sd)
+	out$all.chains[ , '95%CI_low'] <- apply(stack, 2, FUN = stats::quantile, 0.025, na.rm = TRUE)
+	out$all.chains[ , '95%CI_upp'] <- apply(stack, 2, FUN = stats::quantile, 0.975, na.rm = TRUE)
 
 	out
 

@@ -21,7 +21,6 @@
 #'
 #' # Just making variable names:
 #' param <- 'gamma'
-#' hammer_param(param)
 #' hammer_param(param, i = 0:1)
 #' hammer_param(param, j = 1:2)
 #' hammer_param(param, i = 0:1, j = 1:2)
@@ -39,8 +38,8 @@
 #' # Fuzzy finding of indexed variables:
 #' hammer_param('beta', i = TRUE, mcmc = mcmc) # none with names beta0, etc.
 #' hammer_param('beta', j = TRUE, mcmc = mcmc)
-#' hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
-#' hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
+#' hammer_param('z_hat', j = TRUE, k = 1:2, mcmc = mcmc)
+#' hammer_param('z_hat', j = TRUE, k = TRUE, mcmc = mcmc)
 #' 
 #' @export
 hammer_param <- function(
@@ -64,20 +63,77 @@ hammer_param <- function(
 
 	}
 
-	if (!inherits(mcmc, 'mcmc.list')) {
+	if (is.null(j) & (!is.null(k) | !is.null(l))) stop('Argument `j` cannot be NULL and k and/or l non-NULL.')
+
+	if (is.null(mcmc)) {
+		mcmc_samples <- NULL
+	} else if (!inherits(mcmc, 'mcmc.list')) {
 		mcmc_samples <- hammer_samples(mcmc, fail = TRUE)
 	} else {
 		mcmc_samples <- mcmc
 	}
 
 	### get variable names
-	if (is.null(param)) {
-
-		if (!is.null(mcmc_samples))	{
-			param <- colnames(mcmc_samples[[1]])
-		} else {
-			stop('Both `param` and `mcmc` are NULL. Please provide one or the other, or both.')
+	if (is.null(param) & is.null(mcmc_samples)) {
+		stop('Both `param` and `mcmc` are NULL. Please provide one or the other, or both.')
+	} else if (!is.null(param) & is.null(mcmc_samples)) {
+	
+		if (is.null(i) & is.null(j)) {
+			out <- param
+		} else if (!is.null(i) & is.null(j)) {
+			out <- paste0(param, i)
+		} else if (is.null(i) & !is.null(j) & is.null(k)) {
+			out <- paste0(param, '[', j, ']')
+		} else if (!is.null(i) & !is.null(j) & is.null(k)) {
+			
+			indices <- expand.grid(i = i, j = j)
+			n_params <- nrow(indices)
+			out <- rep(NA_character_, n_params)
+			for (n_param in 1:n_params) {
+				out[n_param] <- paste0(param, indices$i[n_param], '[', indices$j[n_param], ']')
+			}
+		
+		} else if (!is.null(i) & !is.null(j) & !is.null(k) & is.null(l)) {
+			
+			indices <- expand.grid(i = i, j = j, k = k)
+			n_params <- nrow(indices)
+			out <- rep(NA_character_, n_params)
+			for (n_param in 1:n_params) {
+				out[n_param] <- paste0(param, indices$i[n_param], '[', indices$j[n_param], ', ', indices$k[n_param], ']')
+			}
+		
+		} else if (is.null(i) & !is.null(j) & !is.null(k) & is.null(l)) {
+			
+			indices <- expand.grid(j = j, k = k)
+			n_params <- nrow(indices)
+			out <- rep(NA_character_, n_params)
+			for (n_param in 1:n_params) {
+				out[n_param] <- paste0(param, '[', indices$j[n_param], ', ', indices$k[n_param], ']')
+			}
+		
+		} else if (!is.null(i) & !is.null(j) & !is.null(k) & !is.null(l)) {
+			
+			indices <- expand.grid(i = i, j = j, k = k, l = l)
+			n_params <- nrow(indices)
+			out <- rep(NA_character_, n_params)
+			for (n_param in 1:n_params) {
+				out[n_param] <- paste0(param, indices$i[n_param], '[', indices$j[n_param], ', ', indices$k[n_param], ', ', indices$l[n_param], ']')
+			}
+		
+		} else if (is.null(i) & !is.null(j) & !is.null(k) & !is.null(l)) {
+			
+			indices <- expand.grid(j = j, k = k, l = l)
+			n_params <- nrow(indices)
+			out <- rep(NA_character_, n_params)
+			for (n_param in 1:n_params) {
+				out[n_param] <- paste0(param, '[', indices$j[n_param], ', ', indices$k[n_param], ', ', indices$l[n_param], ']')
+			}
+		
 		}
+
+	} else if (is.null(param)) {
+
+		out <- colnames(mcmc_samples[[1]])
 		
 	} else {
 		
@@ -85,16 +141,16 @@ hammer_param <- function(
 		if (length(param) > 1L) {
 		
 			params_base <- param
-			param <- character()
+			out <- character()
 			for (param_base in params_base) {
 				
-				param_this <- hammer_param(
+				this_out <- hammer_param(
 					param = param_base,
 					i = i, j = j, k = k, l = l,
 					mcmc = mcmc_samples
 				)
 				
-				param <- c(param, param_this)
+				out <- c(param, this_out)
 				
 			}
 		
@@ -102,7 +158,9 @@ hammer_param <- function(
 		} else {
 			
 			if (is.logical(j) & is.logical(k)) {
-				warning('Extracting variable names can take a long time if at least two of `j`, `k`, and `l` are logical. Consider using numeric indices instead.')
+				if (ncol(mcmc_samples[[1]]) > 1000) {
+					warning('Extracting variable names can take a long time if at least two of `j`, `k`, and `l` are logical and there are a lot of parameters in the MCMC list. Consider using numeric indices instead.')
+				}
 			}
 
 			### get indices
@@ -117,22 +175,22 @@ hammer_param <- function(
 			len_l <- length(l)
 			
 			### get candidate variable names
-			if (!is.null(i)) param <- paste0(rep(param, len_i), i)
+			if (!is.null(i)) out <- paste0(rep(param, len_i), i)
 
 			if (!is.null(j) & is.null(k)) {
 			
 				indices <- expand.grid(param = param, j = j)
-				params <- paste0(indices$param, '[', indices$j, ']')
+				out <- paste0(indices$param, '[', indices$j, ']')
 					
 			} else if (!is.null(j) & !is.null(k) & is.null(l)) {
 				
 				indices <- expand.grid(param = param, j = j, k = k)
-				params <- paste0(indices$param, '[', indices$j, ', ', indices$k, ']')
+				out <- paste0(indices$param, '[', indices$j, ', ', indices$k, ']')
 
 			} else if (!is.null(j) & !is.null(k) & !is.null(l)) {
 
 				indices <- expand.grid(param = param, j = j, k = k, l = l)
-				params <- paste0(indices$param, '[', indices$j, ', ', indices$k, ', ', indices$l, ']')
+				out <- paste0(indices$param, '[', indices$j, ', ', indices$k, ', ', indices$l, ']')
 			
 			}
 			
@@ -144,13 +202,13 @@ hammer_param <- function(
 	if (!is.null(mcmc_samples)) {
 		cols <- colnames(mcmc_samples[[1]])
 		if (length(mcmc_samples) > 0) {
-			params <- params[params %in% cols]
+			out <- out[out %in% cols]
 		} else {
-			params <- params[params %in% cols]
+			out <- out[out %in% cols]
 		}
 	}
 	
-	params
+	out
 	
 }
 

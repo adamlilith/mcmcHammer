@@ -21,15 +21,23 @@ Find a bug? Please report it and how it occurred on \href{https://github.com/ada
 }
 
 \subsection{MCMC chain manipulation}{
-
-hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
-\code{\link[=hammer_rbind]{hammer_rbind()}}: "Stack" MCMC chains into a single matrix.
+\itemize{
+\item hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
+\item \code{\link[=hammer_rbind]{hammer_rbind()}}: "Stack" MCMC chains into a single matrix.
+}
 }
 
 \subsection{Helper functions:}{
+\itemize{
+\item \code{\link[=hammer_param]{hammer_param()}}: Match variables names to MCMC columns.
+\item \code{\link[=hammer_resummarize]{hammer_resummarize()}}: Per-chain and all-chains summary matrices.
+}
+}
 
-\code{\link[=hammer_param]{hammer_param()}}: Match variables names to MCMC columns.
-\code{\link[=hammer_resummary]{hammer_resummary()}}: Per-chain and all-chains summary matrices.
+\subsection{Example data}{
+\itemize{
+\item \code{mcmc}: An "MCMC \code{list}" similar to output from \strong{rstan}, \strong{rjags}, and \strong{nimble}.
+}
 }
 }
 \seealso{

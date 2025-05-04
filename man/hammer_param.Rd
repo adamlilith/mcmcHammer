@@ -36,7 +36,6 @@ This function automates finding of indexed variable in an MCMC object. These inc
 
 # Just making variable names:
 param <- 'gamma'
-hammer_param(param)
 hammer_param(param, i = 0:1)
 hammer_param(param, j = 1:2)
 hammer_param(param, i = 0:1, j = 1:2)
@@ -54,7 +53,7 @@ hammer_param(param, j = 3:4, mcmc = mcmc)
 # Fuzzy finding of indexed variables:
 hammer_param('beta', i = TRUE, mcmc = mcmc) # none with names beta0, etc.
 hammer_param('beta', j = TRUE, mcmc = mcmc)
-hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
-hammer_param('gamma', j = TRUE, k = 1:2, mcmc = mcmc)
+hammer_param('z_hat', j = TRUE, k = 1:2, mcmc = mcmc)
+hammer_param('z_hat', j = TRUE, k = TRUE, mcmc = mcmc)
 
 }
