@@ -70,6 +70,6 @@ All functions begin with `hammer_` to assist finding them with automated code-co
 
 ### Helper functions
 * `hammer_param()`: Match variables names to MCMC columns.
-* `hammer_resummary()`: Per-chain and all-chains summary matrices.
+* `hammer_resummarize()`: Per-chain and all-chains summary matrices.
 
 *Can't touch this.*
