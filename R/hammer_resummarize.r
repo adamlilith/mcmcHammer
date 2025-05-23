@@ -3,6 +3,7 @@
 #' @description This function re-calculates the summary statistics of MCMC chains.
 #' 
 #' @param mcmc An `mcmc` or `mcmc.list` object, or a list of such objects.
+#' @param na.rm Logical: If `FALSE` (default), then summary statistics will be `NA` if any value in any iteration is `NA` (and it probably should be `NA`). However, if you set this to `TRUE`, then `NA` values are ignored.
 #'
 #' @returns A `list` with the following structure:
 #' ```
@@ -20,7 +21,7 @@
 #' str(summ)
 #'
 #' @export
-hammer_resummarize <- function(mcmc) {
+hammer_resummarize <- function(mcmc, na.rm = FALSE) {
 
 	if (inherits(mcmc, 'mcmc')) {
 		mcmc <- list(list(mcmc))
@@ -38,11 +39,11 @@ hammer_resummarize <- function(mcmc) {
 	
 		out[[n_chain]] <- matrix(NA_real_, nrow = n_vars, ncol = 5, dimnames = list(vars, c('Mean', 'Median', 'St.Dev.', '95%CI_low', '95%CI_upp')))
 
-		out[[n_chain]][ , 'Mean'] <- colMeans(mcmc[[1]][[n_chain]])
-		out[[n_chain]][ , 'Median'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::median)
-		out[[n_chain]][ , 'St.Dev.'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::sd)
-		out[[n_chain]][ , '95%CI_low'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::quantile, 0.025)
-		out[[n_chain]][ , '95%CI_upp'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::quantile, 0.975)
+		out[[n_chain]][ , 'Mean'] <- colMeans(mcmc[[1]][[n_chain]], na.rm = na.rm)
+		out[[n_chain]][ , 'Median'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::median, na.rm = na.rm)
+		out[[n_chain]][ , 'St.Dev.'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::sd, na.rm = na.rm)
+		out[[n_chain]][ , '95%CI_low'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::quantile, probs = 0.025, na.rm = na.rm)
+		out[[n_chain]][ , '95%CI_upp'] <- apply(mcmc[[1]][[n_chain]], 2, FUN = stats::quantile, probs = 0.975, na.rm = na.rm)
 
 	
 	}
@@ -53,13 +54,13 @@ hammer_resummarize <- function(mcmc) {
 	stack <- do.call('rbind', mcmc[[1]])
 	row_sums <- rowSums(stack)
 	nas <- anyNA(row_sums)
-	if (nas) warning('Some MCMC samples are NA.')
+	if (nas) warning('Some MCMC samples are NA. Sampling may be invalid.')
 	
-	out$all.chains[ , 'Mean'] <- colMeans(stack)
-	out$all.chains[ , 'Median'] <- apply(stack, 2, FUN = stats::median)
-	out$all.chains[ , 'St.Dev.'] <- apply(stack, 2, FUN = stats::sd)
-	out$all.chains[ , '95%CI_low'] <- apply(stack, 2, FUN = stats::quantile, 0.025, na.rm = TRUE)
-	out$all.chains[ , '95%CI_upp'] <- apply(stack, 2, FUN = stats::quantile, 0.975, na.rm = TRUE)
+	out$all.chains[ , 'Mean'] <- colMeans(stack, na.rm = na.rm)
+	out$all.chains[ , 'Median'] <- apply(stack, 2, FUN = stats::median, na.rm = na.rm)
+	out$all.chains[ , 'St.Dev.'] <- apply(stack, 2, FUN = stats::sd, na.rm = na.rm)
+	out$all.chains[ , '95%CI_low'] <- apply(stack, 2, FUN = stats::quantile, probs = 0.025, na.rm = na.rm)
+	out$all.chains[ , '95%CI_upp'] <- apply(stack, 2, FUN = stats::quantile, probs = 0.975, na.rm = na.rm)
 
 	out
 
