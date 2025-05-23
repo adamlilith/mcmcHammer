@@ -134,7 +134,8 @@ hammer_param <- function(
 	} else if (is.null(param)) {
 
 		out <- colnames(mcmc_samples[[1]])
-		
+	
+	# parameters and mcmc supplied
 	} else {
 		
 		### multiple parameters?
@@ -149,8 +150,7 @@ hammer_param <- function(
 					i = i, j = j, k = k, l = l,
 					mcmc = mcmc_samples
 				)
-				
-				out <- c(param, this_out)
+				out <- c(out, this_out)
 				
 			}
 		
@@ -175,9 +175,15 @@ hammer_param <- function(
 			len_l <- length(l)
 			
 			### get candidate variable names
-			if (!is.null(i)) out <- paste0(rep(param, len_i), i)
-
-			if (!is.null(j) & is.null(k)) {
+			if (is.null(i) & is.null(j)) {
+			
+				out <- param
+			
+			} else if (!is.null(i)) {
+				
+				out <- paste0(rep(param, len_i), i)
+			
+			} else if (!is.null(j) & is.null(k)) {
 			
 				indices <- expand.grid(param = param, j = j)
 				out <- paste0(indices$param, '[', indices$j, ']')
