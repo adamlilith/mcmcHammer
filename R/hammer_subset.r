@@ -45,6 +45,7 @@ hammer_subset <- function(
 		j <- NULL
 		k <- NULL
 		l <- NULL
+		keep = TRUE
 
 	}
 
