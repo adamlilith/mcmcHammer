@@ -1,25 +1,21 @@
 # mcmcHammer
- Tools for managing MCMC chains
+Tools for managing MCMC chains
 
 <img align="right" src="mcmcHammer.png" height="250"/>
 
 **mcmcHammer** is a "helper" package for working with Monte Carlo Markov Chain objects produced by popular Bayesian **R** packages like **rstan**, **rjags**, and **nimble**. These package produce `list` objects that have this kind of structure:
 
 ```
-mcmc$samples
+mcmc$samples:
 mcmc$samples$chain1 <matrix of posterior samples, one per MCMCiteration>
 mcmc$samples$chain2 <matrix of posterior samples, one per MCMCiteration>
-mcmc$samples$chain3 <matrix of posterior samples, one per MCMCiteration>
-mcmc$samples$chain4 <matrix of posterior samples, one per MCMCiteration>
-mcmc$summary
+mcmc$summary:
 mcmc$summary$chain1 <matrix of summary statistics for chain 1>
 mcmc$summary$chain2 <matrix of summary statistics for chain 2>
-mcmc$summary$chain3 <matrix of summary statistics for chain 3>
-mcmc$summary$chain4 <matrix of summary statistics for chain 4>
 mcmc$summary$all.chains <matrix of summary statistics for all chains>
 ```
 
-Functions in this package do *not* create plots or calculate statistics. Rather, its specialty is making extraction of posteriors, and subsetting chains and components of MCMC objects easy (no regex expressions, no need to do `paste(beta[', 1:207, '])'`, etc.).
+Functions in this package do *not* create plots or calculate statistics. Rather, its specialty is making extraction of posteriors, subsetting chains, and combining MCMC objects easy (no need to look up regex expressions, no need to do `paste(beta[', 1:207, '])'`, etc.).
 
 As an example example, assume your set of MCMC chains have variables named `beta0`, `beta1`, and `beta2`, as well as `gamma[1, 1]`, `gamma[1, 2]`, `gamma[2, 1]` and `gamma[2, 2]`, in addition to thousands of other variables. You can easily subset the chains to just these variables:
 
@@ -43,7 +39,7 @@ In all of the functions, you can use the shortcut (like `i = TRUE`) if you don't
 
 You can install **mcmcHammer** from GitHub using:
  
-`remotes::install_github('adamlilith/mcmcHammer', dependencies=TRUE)`  
+`remotes::install_github('adamlilith/mcmcHammer', dependencies = TRUE)`  
 
 You may need to install the `remotes` package first, using:
 
@@ -65,11 +61,12 @@ All functions begin with `hammer_` to assist finding them with automated code-co
 * `hammer_subset()`: Subset MCMC chains by variable name and/or index.
 
 ### MCMC chain manipulation
+* `hammer_cbind()`: Combine side-to-side compatible `mcmc`, `mcmc.list`, or `list`s of `mcmc.list`s.
 * `hammer_combine()`: Combine two or more MCMC objects and calculate new summary statistics.
 * `hammer_rbind()`: "Stack" MCMC chains into a single matrix.
 
 ### Helper functions
 * `hammer_param()`: Match variables names to MCMC columns.
-* `hammer_resummarize()`: Per-chain and all-chains summary matrices.
+* `hammer_resummarize()` / `hammer_resummarise()`: Per-chain and all-chains summary matrices.
 
 *Can't touch this.*

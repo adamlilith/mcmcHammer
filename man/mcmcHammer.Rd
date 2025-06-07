@@ -22,7 +22,8 @@ Find a bug? Please report it and how it occurred on \href{https://github.com/ada
 
 \subsection{MCMC chain manipulation}{
 \itemize{
-\item hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
+\item \code{\link[=hammer_cbind]{hammer_cbind()}}: Combine side-to-side compatible \code{mcmc}, \code{mcmc.list}, or \code{list}s of \code{mcmc.list}s.
+\item \code{\link[=hammer_combine]{hammer_combine()}}: Combine two or more MCMC objects and calculate new summary statistics.
 \item \code{\link[=hammer_rbind]{hammer_rbind()}}: "Stack" MCMC chains into a single matrix.
 }
 }
