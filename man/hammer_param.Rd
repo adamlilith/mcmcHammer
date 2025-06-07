@@ -7,22 +7,21 @@
 hammer_param(param, i = NULL, j = NULL, k = NULL, l = NULL, mcmc = NULL)
 }
 \arguments{
-\item{param}{Name of the variable(s). The outcome depends on the definitions of \code{i}, \code{j}, \code{k}, and \code{l}.
+\item{param}{Name of the variable(s).
 \itemize{
 \item \code{param = NULL}: All variables in the MCMC object. An object must be supplied to the \code{mcmc} argument.
-\item \verb{param =} a character vector and \code{i} is a numeric vector: Variables with the pattern "\verb{param*}" where \code{*} is \code{i}. For example: \code{beta1}, \code{beta2}, and \code{beta3}.
-\item \verb{param =} a character vector and \code{i} is \code{TRUE}: Finds in the MCMC object all variables with the pattern "\verb{param*}" where \code{*} is numeric. You must supply \code{mcmc} in this case.
-\itemize{
-\item \verb{param =} a character vector and \code{j} is a numeric vector, but \code{k} is \code{NULL}: Variables with the pattern "\code{param[j]}".
-\item \verb{param =} a character vector and \code{j} is \code{TRUE}, but \code{k} is \code{NULL}: Variables with the pattern "\code{param[j]}". You must supply \code{mcmc} in this case.
-\item \verb{param =} a character vector and \code{j} and \code{k} are a numeric vectors but \code{l} is \code{NULL}: Variables with the pattern "\code{beta[j, k]}".
-\item \verb{param =} a character vector and \code{j} and/or \code{k} are \code{TRUE} but \code{l} is \code{NULL}: Variables with the pattern "\verb{beta[*, k]}", "\verb{beta[j, *]}", or "\verb{beta[*, *]}" (depending on values of \code{j} and \code{k}. You must supply \code{mcmc} in this case.
-\item \verb{param =} a character vector and \code{j}, \code{k}, and \code{l} are a numeric vectors: Variables with the pattern "\code{beta[j, k, l]}".
-\item \verb{param =} a character vector and one or more of \code{j}, \code{k}, and \code{l} are a numeric vectors and/or \code{TRUE}: Variables with the pattern "\verb{beta[*, k, l]}", "\verb{beta[j, *, l]}", "\verb{beta[j, k, *]}", "\verb{beta[*, *, l]}", "\verb{beta[*, k, *]}",  "\verb{beta[j, *, *]}", or "\verb{beta[*, *, *]}". You must supply \code{mcmc} in this case.
-}
+\item \verb{param =} a character vector and any of \code{i}, \code{j}, \code{k}, and/or \code{l} are not \code{NULL}: Returns a vector of variable names dependent on which indices are not \code{NULL}. You define \code{i}, \code{j}, \code{k}, and/or \code{l} as numeric vectors. For example, \code{hammer_param('beta', i = 1:3)} will return \code{beta1}, \code{beta2}, and \code{beta3}. You can also define any index as \code{TRUE} or \code{FALSE} (they have the same effect), in which case the function will return the names of all variables in the \code{mcmc} object that match the given index.
 }}
 
-\item{i, j, k, l}{Indices used to specify variable names. Please see the help for \code{\link[=hammer_param]{hammer_param()}}.}
+\item{i, j, k, l}{Indices used to specify variable names:
+\itemize{
+\item \code{i} refers to indices that occur immediately after the variable's "base" name. For example, if \code{param} is \code{beta}, and \verb{i = 0:2', then the function will return }beta0\verb{, }beta1\verb{, and }beta2`.
+\item \code{j} refers to the \emph{first} index in square brackets. For example, if \code{param} is \code{beta} and \code{j = 1:3}, then the output will be \code{beta[1]}, \code{beta[2]}, and \code{beta[3]}.
+\item \code{k} refers to the \emph{second} index in square brackets. If \code{k} is not \code{NULL}, then \code{j} cannot be \code{NULL}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, and \code{k = 1:3}, then the output will be like \code{beta[1, 1]}, \code{beta[2, 1]}, \code{beta[1, 2]}, \code{beta[2, 2]}, \code{beta[1, 3]}, and \code{beta[2, 3]}.
+\item \code{l} refers to the \emph{third} index in square brackets. You must also define \code{j} and \code{k} is you provide \code{l}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, \code{k = 4:5}, and \code{l = 9:10}, then the output will be like \code{beta[1, 4, 9]}, \code{beta[2, 4, 9]}, \code{beta[1, 5, 9]}, \code{beta[2, 5, 9]}, \code{beta[1, 4, 10]}, \code{beta[2, 4, 10]}, and so on.
+\item You can also define \code{i} when you define \code{j} alone, \code{j} and \code{k}, or \code{j}, \code{k}, and \code{l} to get outputs like \code{beta0[1]}\verb{, or like \code{beta0[1, 1]}, or like \code{beta0[1, 2, 3]}}.
+You must specify all of the indices that would appear in square brackets. For example, for the pattern \code{param[j, k, l]}, you need to define \code{j}, \code{k}, and \code{l}. You can't just define \code{k = 1:2}. You need to set \code{j} and \code{l} equal to numeric/integer vectors and/or logical values.
+}}
 
 \item{mcmc}{An object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then uses this if it can.}
 }
@@ -30,7 +29,7 @@ hammer_param(param, i = NULL, j = NULL, k = NULL, l = NULL, mcmc = NULL)
 Character vector of variables.
 }
 \description{
-This function automates finding of indexed variable in an MCMC object. These include, for example, variables like \code{beta1}, \code{beta2}, \code{beta3}, etc. or variables like \code{beta[1]}, \code{beta[2]}, \code{beta[1]}, etc. Only variable named in the MCMC object are returned.
+This function automates finding of indexed variable in an MCMC object. These include, for example, variables like \code{beta1}, \code{beta2}, \code{beta3}, etc. or variables like \code{beta[1]}, \code{beta[2]}, \code{beta[1]}, etc.
 }
 \examples{
 

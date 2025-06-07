@@ -10,10 +10,11 @@
 #' * [hammer_samples()]: Extract an `mcmc.list` object with MCMC samples.
 #' * [hammer_summaries()]: Extract an "summary" list of matrices.
 #' * [hammer_summary()]: Extract an "all=chains" summary matrix.
-#' *  [hammer_subset()]: Subset MCMC chains by variable name and/or index.
+#' * [hammer_subset()]: Subset MCMC chains by variable name and/or index.
 
 #' ## MCMC chain manipulation
-#' * hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
+#' * [hammer_cbind()]: Combine side-to-side compatible `mcmc`, `mcmc.list`, or `list`s of `mcmc.list`s.
+#' * [hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
 #' * [hammer_rbind()]: "Stack" MCMC chains into a single matrix.
 #'
 #' ## Helper functions:

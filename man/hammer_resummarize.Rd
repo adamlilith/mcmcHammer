@@ -4,10 +4,12 @@
 \alias{hammer_resummarize}
 \title{Re-calculate summaries of MCMC chains}
 \usage{
-hammer_resummarize(mcmc)
+hammer_resummarize(mcmc, na.rm = FALSE)
 }
 \arguments{
 \item{mcmc}{An \code{mcmc} or \code{mcmc.list} object, or a list of such objects.}
+
+\item{na.rm}{Logical: If \code{FALSE} (default), then summary statistics will be \code{NA} if any value in any iteration is \code{NA} (and it probably should be \code{NA}). However, if you set this to \code{TRUE}, then \code{NA} values are ignored.}
 }
 \value{
 A \code{list} with the following structure:

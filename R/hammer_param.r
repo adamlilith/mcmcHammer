@@ -1,19 +1,19 @@
 #' Match variable names to results from an MCMC
 #'
-#' This function automates finding of indexed variable in an MCMC object. These include, for example, variables like `beta1`, `beta2`, `beta3`, etc. or variables like `beta[1]`, `beta[2]`, `beta[1]`, etc. Only variable named in the MCMC object are returned.
+#' This function automates finding of indexed variable in an MCMC object. These include, for example, variables like `beta1`, `beta2`, `beta3`, etc. or variables like \code{beta[1]}, \code{beta[2]}, \code{beta[1]}, etc.
 #'
-#' @param param Name of the variable(s). The outcome depends on the definitions of `i`, `j`, `k`, and `l`.
+#' @param param Name of the variable(s).
 #' * `param = NULL`: All variables in the MCMC object. An object must be supplied to the `mcmc` argument.
-#' * `param =` a character vector and `i` is a numeric vector: Variables with the pattern "`param*`" where `*` is `i`. For example: `beta1`, `beta2`, and `beta3`.
-#' * `param =` a character vector and `i` is `TRUE`: Finds in the MCMC object all variables with the pattern "`param*`" where `*` is numeric. You must supply `mcmc` in this case.
-#'     * `param =` a character vector and `j` is a numeric vector, but `k` is `NULL`: Variables with the pattern "`param[j]`".
-#'     * `param =` a character vector and `j` is `TRUE`, but `k` is `NULL`: Variables with the pattern "`param[j]`". You must supply `mcmc` in this case.
-#'     * `param =` a character vector and `j` and `k` are a numeric vectors but `l` is `NULL`: Variables with the pattern "`beta[j, k]`".
-#'     * `param =` a character vector and `j` and/or `k` are `TRUE` but `l` is `NULL`: Variables with the pattern "`beta[*, k]`", "`beta[j, *]`", or "`beta[*, *]`" (depending on values of `j` and `k`. You must supply `mcmc` in this case.
-#'     * `param =` a character vector and `j`, `k`, and `l` are a numeric vectors: Variables with the pattern "`beta[j, k, l]`".
-#'     * `param =` a character vector and one or more of `j`, `k`, and `l` are a numeric vectors and/or `TRUE`: Variables with the pattern "`beta[*, k, l]`", "`beta[j, *, l]`", "`beta[j, k, *]`", "`beta[*, *, l]`", "`beta[*, k, *]`",  "`beta[j, *, *]`", or "`beta[*, *, *]`". You must supply `mcmc` in this case.
+#' * `param =` a character vector and any of `i`, `j`, `k`, and/or `l` are not `NULL`: Returns a vector of variable names dependent on which indices are not `NULL`. You define `i`, `j`, `k`, and/or `l` as numeric vectors. For example, `hammer_param('beta', i = 1:3)` will return `beta1`, `beta2`, and `beta3`. You can also define any index as `TRUE` or `FALSE` (they have the same effect), in which case the function will return the names of all variables in the `mcmc` object that match the given index.
 #'
-#' @param i,j,k,l Indices used to specify variable names. Please see the help for [hammer_param()].
+#' @param i,j,k,l Indices used to specify variable names:
+#' * `i` refers to indices that occur immediately after the variable's "base" name. For example, if `param` is `beta`, and `i = 0:2', then the function will return `beta0`, `beta1`, and `beta2`.
+#'  * `j` refers to the *first* index in square brackets. For example, if `param` is `beta` and `j = 1:3`, then the output will be \code{beta[1]}, \code{beta[2]}, and \code{beta[3]}.
+#'  * `k` refers to the *second* index in square brackets. If `k` is not `NULL`, then `j` cannot be `NULL`. For example, if `param` is `beta`, `j = 1:2`, and `k = 1:3`, then the output will be like \code{beta[1, 1]}, \code{beta[2, 1]}, \code{beta[1, 2]}, \code{beta[2, 2]}, \code{beta[1, 3]}, and \code{beta[2, 3]}.
+#' * `l` refers to the *third* index in square brackets. You must also define `j` and `k` is you provide `l`. For example, if `param` is `beta`, `j = 1:2`, `k = 4:5`, and `l = 9:10`, then the output will be like \code{beta[1, 4, 9]}, \code{beta[2, 4, 9]}, \code{beta[1, 5, 9]}, \code{beta[2, 5, 9]}, \code{beta[1, 4, 10]}, \code{beta[2, 4, 10]}, and so on.
+#' * You can also define `i` when you define `j` alone, `j` and `k`, or `j`, `k`, and `l` to get outputs like \code{beta0[1]}`, or like \code{beta0[1, 1]}, or like \code{beta0[1, 2, 3]}`.
+#' You must specify all of the indices that would appear in square brackets. For example, for the pattern \code{param[j, k, l]}, you need to define `j`, `k`, and `l`. You can't just define `k = 1:2`. You need to set `j` and `l` equal to numeric/integer vectors and/or logical values.
+#'
 #' @param mcmc	An object of class `mcmc` or `mcmc.list`, *or* a `list`. If a `list`, the function searches down the first element to see if it can find an `mcmc` or `mcmc.list` object, then uses this if it can.
 #'
 #' @returns Character vector of variables.
@@ -76,161 +76,276 @@ hammer_param <- function(
 	### get variable names
 	if (is.null(param) & is.null(mcmc_samples)) {
 		stop('Both `param` and `mcmc` are NULL. Please provide one or the other, or both.')
-	} else if (!is.null(param) & is.null(mcmc_samples)) {
-	
-		if (is.null(i) & is.null(j)) {
-			out <- param
-		} else if (!is.null(i) & is.null(j)) {
-			out <- paste0(param, i)
-		} else if (is.null(i) & !is.null(j) & is.null(k)) {
-			out <- paste0(param, '[', j, ']')
-		} else if (!is.null(i) & !is.null(j) & is.null(k)) {
-			
-			indices <- expand.grid(i = i, j = j)
-			n_params <- nrow(indices)
-			out <- rep(NA_character_, n_params)
-			for (n_param in 1:n_params) {
-				out[n_param] <- paste0(param, indices$i[n_param], '[', indices$j[n_param], ']')
-			}
-		
-		} else if (!is.null(i) & !is.null(j) & !is.null(k) & is.null(l)) {
-			
-			indices <- expand.grid(i = i, j = j, k = k)
-			n_params <- nrow(indices)
-			out <- rep(NA_character_, n_params)
-			for (n_param in 1:n_params) {
-				out[n_param] <- paste0(param, indices$i[n_param], '[', indices$j[n_param], ', ', indices$k[n_param], ']')
-			}
-		
-		} else if (is.null(i) & !is.null(j) & !is.null(k) & is.null(l)) {
-			
-			indices <- expand.grid(j = j, k = k)
-			n_params <- nrow(indices)
-			out <- rep(NA_character_, n_params)
-			for (n_param in 1:n_params) {
-				out[n_param] <- paste0(param, '[', indices$j[n_param], ', ', indices$k[n_param], ']')
-			}
-		
-		} else if (!is.null(i) & !is.null(j) & !is.null(k) & !is.null(l)) {
-			
-			indices <- expand.grid(i = i, j = j, k = k, l = l)
-			n_params <- nrow(indices)
-			out <- rep(NA_character_, n_params)
-			for (n_param in 1:n_params) {
-				out[n_param] <- paste0(param, indices$i[n_param], '[', indices$j[n_param], ', ', indices$k[n_param], ', ', indices$l[n_param], ']')
-			}
-		
-		} else if (is.null(i) & !is.null(j) & !is.null(k) & !is.null(l)) {
-			
-			indices <- expand.grid(j = j, k = k, l = l)
-			n_params <- nrow(indices)
-			out <- rep(NA_character_, n_params)
-			for (n_param in 1:n_params) {
-				out[n_param] <- paste0(param, '[', indices$j[n_param], ', ', indices$k[n_param], ', ', indices$l[n_param], ']')
-			}
-		
-		}
-
 	} else if (is.null(param)) {
 
 		out <- colnames(mcmc_samples[[1]])
-		
+	
+	# parameters supplied, mcmc may be supplied
 	} else {
 		
 		### multiple parameters?
 		if (length(param) > 1L) {
 		
-			params_base <- param
+			params <- param
 			out <- character()
-			for (param_base in params_base) {
+			for (this_param in params) {
 				
 				this_out <- hammer_param(
-					param = param_base,
+					param = this_param,
 					i = i, j = j, k = k, l = l,
 					mcmc = mcmc_samples
 				)
-				
-				out <- c(param, this_out)
+				out <- c(out, this_out)
 				
 			}
 		
 		### just one parameter
 		} else {
-			
-			if (is.logical(j) & is.logical(k)) {
-				if (ncol(mcmc_samples[[1]]) > 1000) {
-					warning('Extracting variable names can take a long time if at least two of `j`, `k`, and `l` are logical and there are a lot of parameters in the MCMC list. Consider using numeric indices instead.')
-				}
-			}
 
-			### get indices
-			i <- .get_indices(id = i, mcmc_samples = mcmc_samples)
-			j <- .get_indices(id = j, mcmc_samples = mcmc_samples)
-			k <- .get_indices(id = k, mcmc_samples = mcmc_samples)
-			l <- .get_indices(id = l, mcmc_samples = mcmc_samples)
-			
-			len_i <- length(i)
-			len_j <- length(j)
-			len_k <- length(k)
-			len_l <- length(l)
-			
-			### get candidate variable names
-			if (!is.null(i)) out <- paste0(rep(param, len_i), i)
-
-			if (!is.null(j) & is.null(k)) {
-			
-				indices <- expand.grid(param = param, j = j)
-				out <- paste0(indices$param, '[', indices$j, ']')
-					
-			} else if (!is.null(j) & !is.null(k) & is.null(l)) {
+			# missing indices
+			if (is.null(i) & is.null(j)) {
+				out <- param
+			# just i
+			} else if (!is.null(i) & is.null(j)) {
 				
-				indices <- expand.grid(param = param, j = j, k = k)
-				out <- paste0(indices$param, '[', indices$j, ', ', indices$k, ']')
+				if (!is.null(mcmc_samples)) {
 
-			} else if (!is.null(j) & !is.null(k) & !is.null(l)) {
+					if (is.logical(i)) {
+						pattern <- paste0('^', param, '\\d+$')
+					} else {
+						pattern <- paste0(param, i)
+					}
 
-				indices <- expand.grid(param = param, j = j, k = k, l = l)
-				out <- paste0(indices$param, '[', indices$j, ', ', indices$k, ', ', indices$l, ']')
+					cols <- colnames(mcmc_samples[[1]])
+					if (length(pattern) > 1) pattern <- paste(pattern, collapse = '|')
+					has <- grepl(x = cols, pattern = pattern)
+					out <- cols[has]
+
+				} else {
+					out <- paste0(param, i)
+				}
 			
+			# just j
+			} else if (is.null(i) & !is.null(j) & is.null(k)) {
+
+				if (!is.null(mcmc_samples)) {
+				
+					if (is.logical(j)) {
+						pattern <- paste0('^', param, '\\[\\d+\\]$')
+					} else {
+						pattern <- paste0(param, '\\[', j, '\\]$')
+					}
+
+					cols <- colnames(mcmc_samples[[1]])
+					if (length(pattern) > 1) pattern <- paste(pattern, collapse ='|')
+					has <- grepl(x = cols, pattern = pattern)
+					out <- cols[has]
+
+				} else {
+					out <- paste0(param, '[', j, ']')
+				}
+
+			# i and j
+			} else if (!is.null(i) & !is.null(j) & is.null(k)) {
+			
+				if (!is.null(mcmc_samples)) {
+
+					if (is.logical(i) & is.logical(j)) {
+						pattern <- paste0('^', param, '\\d+\\[\\d+\\]$')
+					} else if (!is.logical(i) & is.logical(j)) {
+						pattern <- paste0('^', param, i, '[\\d+\\]$')
+					} else if (is.logical(i) & !is.logical(j)) {
+						pattern <- paste0('^', param, '\\d+\\[', j, '\\]$')
+					} else {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = j, brack2 = '\\]', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					}
+
+					cols <- colnames(mcmc_samples[[1]])
+					if (length(pattern) > 1) pattern <- paste(pattern, collapse ='|')
+					has <- grepl(x = cols, pattern = pattern)
+					out <- cols[has]
+
+				} else {
+					pattern <- expand.grid(param = param, i = i, brack1 = '[', j = j, brack2 = ']', stringsAsFactors = FALSE)
+					out <- .grid_to_vector(pattern)
+				}
+
+			# not i but j and k
+			} else if (is.null(i) & !is.null(j) & !is.null(k) & is.null(l)) {
+			
+				if (!is.null(mcmc_samples)) {
+				
+					if (is.logical(j) & is.logical(k)) {
+						pattern <- paste0('^', param, '\\[\\d+, \\d+\\]$')
+					} else if (!is.logical(j) & is.logical(k)) {
+						pattern <- paste0('^', param, '\\[', j, ', \\d+\\]$')
+					} else if (is.logical(j) & !is.logical(k)) {
+						pattern <- paste0('^', param, '\\[\\d+, ', k, '\\]$')
+					} else {
+						
+						pattern <- expand.grid(param = param, brack1 = '\\[', j = j, comma = ', ', k = k, brack2 = ']$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+
+					}
+
+					cols <- colnames(mcmc_samples[[1]])
+					if (length(pattern) > 1) pattern <- paste(pattern, collapse ='|')
+					has <- grepl(x = cols, pattern = pattern)
+					out <- cols[has]
+
+				} else {
+					pattern <- expand.grid(param = param, brack1 = '[', j = j, comma = ', ', k = k, brack2 = ']', stringsAsFactors = FALSE)
+					out <- .grid_to_vector(pattern)
+				}
+
+			# i, j, and k
+			} else if (!is.null(i) & !is.null(j) & !is.null(k) & is.null(l)) {
+				
+				if (!is.null(mcmc_samples)) {
+				
+					if (is.logical(i) & is.logical(j) & is.logical(k)) {
+						pattern <- paste0('^', param, '\\d+\\[\\d+, \\d+\\]$')
+					} else if (!is.logical(i) & is.logical(j) & is.logical(k)) {
+						pattern <- paste0('^', param, i, '\\[\\d+, \\d+\\]$')
+					} else if (is.logical(i) & !is.logical(j) & is.logical(k)) {
+						pattern <- paste0('^', param, '\\d+\\[', j, ', \\d+\\]$')
+					} else if (!is.logical(i) & is.logical(j) & !is.logical(k)) {
+						pattern <- paste0('^', param, '\\d+\\[\\d+, ', k, '\\]$')
+					} else if (!is.logical(i) & !is.logical(j) & is.logical(k)) {
+						pattern <- expand.grid(hat = '^', param = param, i = i, brack1 = '\\[', j = j, comma = ', ', k = '\\d+', remainder = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (is.logical(i) & !is.logical(j) & !is.logical(k)) {
+						pattern <- expand.grid(hat = '^', param = param, i = '\\d+', brack1 = '\\[', j = j, comma = ', ', k = k, remainder = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & is.logical(j) & !is.logical(k)) {
+						pattern <- expand.grid(hat = '^', param = param, i = i, brack1 = '\\[', j = '\\d+', comma = ', ', k = k, remainder = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & !is.logical(j) & !is.logical(k)) {
+						pattern <- expand.grid(hat = '^', param = param, i = i, brack1 = '\\[', j = j, comma = ', ', k = k, remainder = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					}
+
+					cols <- colnames(mcmc_samples[[1]])
+					if (length(pattern) > 1) pattern <- paste(pattern, collapse ='|')
+					has <- grepl(x = cols, pattern = pattern)
+					out <- cols[has]
+
+				} else {
+					pattern <- expand.grid(param = param, i = i, brack1 = '[', j = j, comma = ', ', k = k, brack2 = ']', stringsAsFactors = FALSE)
+					out <- .grid_to_vector(pattern)
+				}
+
+			# not i, but j, k, l
+			} else if (is.null(i) & !is.null(j) & !is.null(k) & !is.null(l)) {
+				
+				if (!is.null(mcmc_samples)) {
+				
+					if (is.logical(j) & is.logical(k) & is.logical(l)) {
+						pattern <- paste0('^', param, '\\[\\d+, \\d+, \\d+\\]$')
+					} else if (!is.logical(j) & is.logical(k) & is.logical(l)) {
+						pattern <- paste0('^', param, '\\[', j, ', \\d+, \\d+\\]$')
+					} else if (is.logical(j) & !is.logical(k) & is.logical(l)) {
+						pattern <- paste0('^', param, '\\[\\d+, ', k = k, ', \\d+\\]$')
+					} else if (is.logical(j) & is.logical(k) & !is.logical(l)) {
+						pattern <- paste0('^', param, '\\[\\d+, \\d+, ', l, '\\]$')
+					} else if (!is.logical(j) & !is.logical(k) & is.logical(l)) {
+						pattern <- expand.grid(param = param, brack1 = '\\[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = '\\d+', brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(j) & is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, brack1 = '\\[', j = j, comma1 = ', ', k = '\\d+', comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (is.logical(j) & !is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, brack1 = '\\[', j = '\\d+', comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(j) & !is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, brack1 = '\\[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					}
+
+					cols <- colnames(mcmc_samples[[1]])
+					if (length(pattern) > 1) pattern <- paste(pattern, collapse ='|')
+					has <- grepl(x = cols, pattern = pattern)
+					out <- cols[has]
+
+				} else {
+					pattern <- expand.grid(param = param, brack1 = '[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = ']', stringsAsFactors = FALSE)
+					out <- .grid_to_vector(pattern)
+				}
+
+			# all of i, j, k, l
+			} else if (!is.null(i) & !is.null(j) & !is.null(k) & !is.null(l)) {
+				
+				if (!is.null(mcmc_samples)) {
+				
+					if (is.logical(i) & is.logical(j) & is.logical(k) & is.logical(l)) {
+						pattern <- paste0('^', param, '\\d+\\[\\d+, \\d+, \\d+\\]$')
+					} else if (!is.logical(i) & is.logical(j) & is.logical(k) & is.logical(l)) {
+						pattern <- paste0('^', param, i, '\\[\\d+, \\d+, \\d+\\]$')
+					} else if (is.logical(i) & !is.logical(j) & is.logical(k) & is.logical(l)) {
+						pattern <- paste0('^', param, '\\d+\\[', j, ', \\d+, \\d+\\]$')
+					} else if (is.logical(i) & is.logical(j) & !is.logical(k) & is.logical(l)) {
+						pattern <- paste0('^', param, '\\d+\\[\\d+, ', k, ', \\d+\\]$')
+					} else if (is.logical(i) & is.logical(j) & is.logical(k) & !is.logical(l)) {
+						pattern <- paste0('^', param, '\\d+\\[\\d+, \\d+, ', l, '\\]$')
+					
+					} else if (!is.logical(i) & !is.logical(j) & is.logical(k) & is.logical(l)) {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = j, comma1 = ', ', k = '\\d+', comma2 = ', ', l = '\\d+', brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & is.logical(j) & !is.logical(k) & is.logical(l)) {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = '\\d+', comma1 = ', ', k = k, comma2 = ', ', l = '\\d+', brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & is.logical(j) & is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = '\\d+', comma1 = ', ', k = '\\d+', comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (is.logical(i) & !is.logical(j) & !is.logical(k) & is.logical(l)) {
+						pattern <- expand.grid(param = param, i = '\\d+', brack1 = '\\[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = '\\d+', brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (is.logical(i) & !is.logical(j) & is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, i = '\\d+', brack1 = '\\[', j = j, comma1 = ', ', k = '\\d+', comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (is.logical(i) & is.logical(j) & !is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, i = '\\d+', brack1 = '\\[', j = '\\d+', comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (is.logical(i) & !is.logical(j) & !is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, i = '\\d+', brack1 = '\\[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & is.logical(j) & !is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = '\\d+', comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & !is.logical(j) & is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = j, comma1 = ', ', k = '\\d+', comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & !is.logical(j) & !is.logical(k) & is.logical(l)) {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = '\\d+', brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					} else if (!is.logical(i) & !is.logical(j) & !is.logical(k) & !is.logical(l)) {
+						pattern <- expand.grid(param = param, i = i, brack1 = '\\[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = '\\]$', stringsAsFactors = FALSE)
+						pattern <- .grid_to_vector(pattern)
+					}
+
+					cols <- colnames(mcmc_samples[[1]])
+					if (length(pattern) > 1) pattern <- paste(pattern, collapse ='|')
+					has <- grepl(x = cols, pattern = pattern)
+					out <- cols[has]
+
+				} else {
+					pattern <- expand.grid(param = param, i, brack1 = '[', j = j, comma1 = ', ', k = k, comma2 = ', ', l = l, brack2 = ']', stringsAsFactors = FALSE)
+					out <- .grid_to_vector(pattern)
+				}
+
 			}
-			
+
 		} # if just one parameter
 			
 	} # if user-specified column names
-	
-	# valid names?
-	if (!is.null(mcmc_samples)) {
-		cols <- colnames(mcmc_samples[[1]])
-		if (length(mcmc_samples) > 0) {
-			out <- out[out %in% cols]
-		} else {
-			out <- out[out %in% cols]
-		}
-	}
-	
 	out
 	
 }
 
-### get indices
-.get_indices <- function(id, mcmc_samples) {
-
-	# id		i, j, k, or l
-	# mcmc_samples		MCMC matrix
-
-	if (!is.null(id)) {
-		if (inherits(id, 'logical')) {
-			if (id) {
-				if (inherits(mcmc_samples, 'mcmc.list')) {
-					id <- 0L:ncol(mcmc_samples[[1]])
-				} else {
-					id <- 0L:ncol(mcmc_samples)
-				}
-			} else {
-				id <- NULL
-			}
-		}
-	}
-	id
-	
+### functions for combining rows of "pattern" into character vector without undesired spaces
+.paste0_fx <- function(...) { paste0(...) }
+.grid_to_vector <- function(pattern) {
+	args <- as.list(pattern)
+	do.call(.paste0_fx, args = args)
 }
