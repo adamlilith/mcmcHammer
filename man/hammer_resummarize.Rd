@@ -7,7 +7,7 @@
 hammer_resummarize(mcmc, na.rm = FALSE)
 }
 \arguments{
-\item{mcmc}{An \code{mcmc} or \code{mcmc.list} object, or a list of such objects.}
+\item{mcmc}{An object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then uses this if it can.}
 
 \item{na.rm}{Logical: If \code{FALSE} (default), then summary statistics will be \code{NA} if any value in any iteration is \code{NA} (and it probably should be \code{NA}). However, if you set this to \code{TRUE}, then \code{NA} values are ignored.}
 }

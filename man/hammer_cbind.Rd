@@ -9,7 +9,7 @@ hammer_cbind(..., summarize = TRUE)
 \arguments{
 \item{...}{Two or more objects of class \code{mcmc} or \verb{mcmc.list``, or a }list\verb{with the first element being an}mcmc.list\verb{. All inputs must be of the same class (e.g., you can't combine an }mcmc\verb{object with an}mcmc.list`).}
 
-\item{summarize}{Logical: If \code{TRUE} (default), and the input is a set of lists, then calculate summary statistics.}
+\item{summarize}{Logical: If \code{TRUE} (default), and the input is an \code{mcmc.list} or list of lists, then calculate summary statistics.}
 }
 \value{
 An \code{mcmc} object, an \code{mcmc.list}, or a \code{list}.
@@ -20,7 +20,7 @@ This function takes an \code{mcmc.list} and \code{cbind()}'s' them onto one anot
 \examples{
 
 data(mcmc)
-cbinded <- hammer_rbind(mcmc)
+cbinded <- hammer_cbind(mcmc)
 head(cbinded)
 dim(cbinded)
 
