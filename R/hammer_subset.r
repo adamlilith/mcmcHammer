@@ -2,29 +2,30 @@
 #'
 #' @description Often, MCMC chains contain columns for parameters that we do not want to examine for a particular purpose. This function subsets MCMC chains to a specific set.
 #' 
-#' @param mcmc An object of class `mcmc` or `mcmc.list`, *or* a `list`. If a `list`, the function searches down the first element to see if it can find an `mcmc` or `mcmc.list` object, then uses this if it can.
+#' @inheritParams .mcmc
 #'
 #' @param param Character vector: Name of the variable(s).
 #'
-#' @param i,j,k,l Indices used to specify variable names:
-#' * `i` refers to indices that occur immediately after the variable's "base" name. For example, if `param` is `beta`, and `i = 0:2', then the function will return `beta0`, `beta1`, and `beta2`.
-#'  * `j` refers to the *first* index in square brackets. For example, if `param` is `beta` and `j = 1:3`, then the output will be \code{beta[1]}, \code{beta[2]}, and \code{beta[3]}.
-#'  * `k` refers to the *second* index in square brackets. If `k` is not `NULL`, then `j` cannot be `NULL`. For example, if `param` is `beta`, `j = 1:2`, and `k = 1:3`, then the output will be like \code{beta[1, 1]}, \code{beta[2, 1]}, \code{beta[1, 2]}, \code{beta[2, 2]}, \code{beta[1, 3]}, and \code{beta[2, 3]}.
-#' * `l` refers to the *third* index in square brackets. You must also define `j` and `k` is you provide `l`. For example, if `param` is `beta`, `j = 1:2`, `k = 4:5`, and `l = 9:10`, then the output will be like \code{beta[1, 4, 9]}, \code{beta[2, 4, 9]}, \code{beta[1, 5, 9]}, \code{beta[2, 5, 9]}, \code{beta[1, 4, 10]}, \code{beta[2, 4, 10]}, and so on.
-#' * You can also define `i` when you define `j` alone, `j` and `k`, or `j`, `k`, and `l` to get outputs like \code{beta0[1]}`, or like \code{beta0[1, 1]}, or like \code{beta0[1, 2, 3]}`.
-#' You must specify all of the indices that would appear in square brackets. For example, for the pattern \code{param[j, k, l]}, you need to define `j`, `k`, and `l`. You can't just define `k = 1:2`. You need to set `j` and `l` equal to numeric/integer vectors and/or logical values.
+#' @inheritParams .ijkl
+#' @inheritParams .indices
 #'
-#' @param keep Logical: If `TRUE` (default), columns with names in `param` are retained. If `FALSE`, they are discarded.
+#' @param keep Logical: If `TRUE` (default), columns with names in `param` are retained. If `FALSE`, they are discarded. This cannot be set to `FALSE` when the `indices` argument is used.
 #'
-#' @returns An `mcmc` or  `mcmc.list`.
+#' @returns An `mcmc` matrix, an `mcmc.list`, or  a list of list, one of which is an `mcmc.list`.
 #'
 #' @examples
 #'
 #' data(mcmc)
 #' 
+#' # simple subset
 #' param  <- 'alpha'
-#' subsetted <- hammer_subset(mcmc, param, i = TRUE)
-#' head(subsetted)
+#' simple <- hammer_subset(mcmc, param, i = TRUE)
+#' head(simple)
+#'
+#' # subsetting with different indices for each parameter
+#' indices <- list(list(i = TRUE), list(j = TRUE))
+#' params <- c('alpha', 'beta')
+#' complex <- hammer_subset(mcmc, param = params, indices = indices)
 #'
 #' @export
 hammer_subset <- function(
@@ -34,18 +35,43 @@ hammer_subset <- function(
 	j = NULL,
 	k = NULL,
 	l = NULL,
+	indices = NULL,
 	keep = TRUE
 ) {
 
 	if (FALSE) {
 
+		mcmc
 		param
 		i <- NULL
 		j <- NULL
 		k <- NULL
 		l <- NULL
-		keep = TRUE
+		indices <- NULL
+		keep <- TRUE
 
+	}
+
+	if (any(c(!is.null(i), !is.null(j), !is.null(k), !is.null(l))) & !is.null(indices)) stop('You cannot use `i`, `j`, `k`, or `l` *and* `indices`.')
+
+	if (!is.null(indices)) {
+	
+		if (!keep) stop('The value of `keep` cannot be `FALSE` when `indices` is used.')
+		for (count_param in seq_along(param)) {
+		
+			args <- list(mcmc = mcmc, param = param[count_param], keep = keep)
+			args <- c(args, indices[[count_param]])
+			subsetted <- do.call(hammer_subset, args = args)
+
+			if (count_param == 1) {
+				out <- subsetted
+			} else {
+				out <- hammer_cbind(out, subsetted)
+			}
+		
+		}
+		return(out)
+	
 	}
 
 	mcmc_samples <- hammer_samples(mcmc)
