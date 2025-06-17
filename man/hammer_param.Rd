@@ -15,11 +15,11 @@ hammer_param(param, i = NULL, j = NULL, k = NULL, l = NULL, mcmc = NULL)
 
 \item{i, j, k, l}{Indices used to specify variable names:
 \itemize{
-\item \code{i} refers to indices that occur immediately after the variable's "base" name. For example, if \code{param} is \code{beta}, and \verb{i = 0:2', then the function will return }beta0\verb{, }beta1\verb{, and }beta2`.
+\item \code{i} refers to indices that occur immediately after the variable's "base" name. For example, if \code{param} is "\code{beta}", and \code{i = 0:2}, then the function will return \code{beta0}, \code{beta1}, and \code{beta2}.
 \item \code{j} refers to the \emph{first} index in square brackets. For example, if \code{param} is \code{beta} and \code{j = 1:3}, then the output will be \code{beta[1]}, \code{beta[2]}, and \code{beta[3]}.
-\item \code{k} refers to the \emph{second} index in square brackets. If \code{k} is not \code{NULL}, then \code{j} cannot be \code{NULL}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, and \code{k = 1:3}, then the output will be like \code{beta[1, 1]}, \code{beta[2, 1]}, \code{beta[1, 2]}, \code{beta[2, 2]}, \code{beta[1, 3]}, and \code{beta[2, 3]}.
-\item \code{l} refers to the \emph{third} index in square brackets. You must also define \code{j} and \code{k} is you provide \code{l}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, \code{k = 4:5}, and \code{l = 9:10}, then the output will be like \code{beta[1, 4, 9]}, \code{beta[2, 4, 9]}, \code{beta[1, 5, 9]}, \code{beta[2, 5, 9]}, \code{beta[1, 4, 10]}, \code{beta[2, 4, 10]}, and so on.
-\item You can also define \code{i} when you define \code{j} alone, \code{j} and \code{k}, or \code{j}, \code{k}, and \code{l} to get outputs like \code{beta0[1]}\verb{, or like \code{beta0[1, 1]}, or like \code{beta0[1, 2, 3]}}.
+\item \code{k} refers to the \emph{second} index in square brackets. If \code{k} is defined (not \code{NULL}), then \code{j} must be defined. For example, if \code{param} is \code{beta}, \code{j = 1:2}, and \code{k = 1:3}, then the output will be like \code{beta[1, 1]}, \code{beta[2, 1]}, \code{beta[1, 2]}, \code{beta[2, 2]}, \code{beta[1, 3]}, and \code{beta[2, 3]}.
+\item \code{l} refers to the \emph{third} index in square brackets. If you provide \code{l}, you must also define \code{j} and \code{k}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, \code{k = 4:5}, and \code{l = 9:10}, then the output will be like \code{beta[1, 4, 9]}, \code{beta[2, 4, 9]}, \code{beta[1, 5, 9]}, \code{beta[2, 5, 9]}, \code{beta[1, 4, 10]}, \code{beta[2, 4, 10]}, and so on.
+\item You can also define \code{i} when you define \code{j} alone, \code{j} and \code{k}, or \code{j}, \code{k}, and \code{l}. This will return patterns like \code{beta0[1]}, or like \code{beta0[1, 1]}, or like \code{beta0[1, 2, 3]}.
 You must specify all of the indices that would appear in square brackets. For example, for the pattern \code{param[j, k, l]}, you need to define \code{j}, \code{k}, and \code{l}. You can't just define \code{k = 1:2}. You need to set \code{j} and \code{l} equal to numeric/integer vectors and/or logical values.
 }}
 

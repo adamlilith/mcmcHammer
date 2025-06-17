@@ -4,7 +4,16 @@
 \alias{hammer_subset}
 \title{Subset MCMC chains to specific parameters}
 \usage{
-hammer_subset(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, keep = TRUE)
+hammer_subset(
+  mcmc,
+  param,
+  i = NULL,
+  j = NULL,
+  k = NULL,
+  l = NULL,
+  indices = NULL,
+  keep = TRUE
+)
 }
 \arguments{
 \item{mcmc}{An object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then uses this if it can.}
@@ -13,18 +22,20 @@ hammer_subset(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, keep = TRUE)
 
 \item{i, j, k, l}{Indices used to specify variable names:
 \itemize{
-\item \code{i} refers to indices that occur immediately after the variable's "base" name. For example, if \code{param} is \code{beta}, and \verb{i = 0:2', then the function will return }beta0\verb{, }beta1\verb{, and }beta2`.
+\item \code{i} refers to indices that occur immediately after the variable's "base" name. For example, if \code{param} is "\code{beta}", and \code{i = 0:2}, then the function will return \code{beta0}, \code{beta1}, and \code{beta2}.
 \item \code{j} refers to the \emph{first} index in square brackets. For example, if \code{param} is \code{beta} and \code{j = 1:3}, then the output will be \code{beta[1]}, \code{beta[2]}, and \code{beta[3]}.
-\item \code{k} refers to the \emph{second} index in square brackets. If \code{k} is not \code{NULL}, then \code{j} cannot be \code{NULL}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, and \code{k = 1:3}, then the output will be like \code{beta[1, 1]}, \code{beta[2, 1]}, \code{beta[1, 2]}, \code{beta[2, 2]}, \code{beta[1, 3]}, and \code{beta[2, 3]}.
-\item \code{l} refers to the \emph{third} index in square brackets. You must also define \code{j} and \code{k} is you provide \code{l}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, \code{k = 4:5}, and \code{l = 9:10}, then the output will be like \code{beta[1, 4, 9]}, \code{beta[2, 4, 9]}, \code{beta[1, 5, 9]}, \code{beta[2, 5, 9]}, \code{beta[1, 4, 10]}, \code{beta[2, 4, 10]}, and so on.
-\item You can also define \code{i} when you define \code{j} alone, \code{j} and \code{k}, or \code{j}, \code{k}, and \code{l} to get outputs like \code{beta0[1]}\verb{, or like \code{beta0[1, 1]}, or like \code{beta0[1, 2, 3]}}.
+\item \code{k} refers to the \emph{second} index in square brackets. If \code{k} is defined (not \code{NULL}), then \code{j} must be defined. For example, if \code{param} is \code{beta}, \code{j = 1:2}, and \code{k = 1:3}, then the output will be like \code{beta[1, 1]}, \code{beta[2, 1]}, \code{beta[1, 2]}, \code{beta[2, 2]}, \code{beta[1, 3]}, and \code{beta[2, 3]}.
+\item \code{l} refers to the \emph{third} index in square brackets. If you provide \code{l}, you must also define \code{j} and \code{k}. For example, if \code{param} is \code{beta}, \code{j = 1:2}, \code{k = 4:5}, and \code{l = 9:10}, then the output will be like \code{beta[1, 4, 9]}, \code{beta[2, 4, 9]}, \code{beta[1, 5, 9]}, \code{beta[2, 5, 9]}, \code{beta[1, 4, 10]}, \code{beta[2, 4, 10]}, and so on.
+\item You can also define \code{i} when you define \code{j} alone, \code{j} and \code{k}, or \code{j}, \code{k}, and \code{l}. This will return patterns like \code{beta0[1]}, or like \code{beta0[1, 1]}, or like \code{beta0[1, 2, 3]}.
 You must specify all of the indices that would appear in square brackets. For example, for the pattern \code{param[j, k, l]}, you need to define \code{j}, \code{k}, and \code{l}. You can't just define \code{k = 1:2}. You need to set \code{j} and \code{l} equal to numeric/integer vectors and/or logical values.
 }}
 
-\item{keep}{Logical: If \code{TRUE} (default), columns with names in \code{param} are retained. If \code{FALSE}, they are discarded.}
+\item{indices}{A \code{list} of \code{lists}. If you want to select multiple parameters, which each have their own indexing (\code{i}, \code{j}, \code{k}, and/or \code{l}), you can specify them with this argument. Each sub-\code{list} should have the indices you wish to use for the given value of \code{param}. Sub-\code{list}s will be matched with the respective value of \code{param}. For example, if you want to select parameters \code{alpha0}, \code{alpha1} and \code{beta[1]} and \code{beta[2]} from an \code{mcmc} chain, you could use \code{hammer_subset(mcmc, param = c('alpha', 'beta'), indices = list(list(i = 0:1), list(j = 1:2)))}. You can't use \code{i}, \code{j}, \code{k}, or \code{l} in combination with \code{indices}.}
+
+\item{keep}{Logical: If \code{TRUE} (default), columns with names in \code{param} are retained. If \code{FALSE}, they are discarded. This cannot be set to \code{FALSE} when the \code{indices} argument is used.}
 }
 \value{
-An \code{mcmc} or  \code{mcmc.list}.
+An \code{mcmc} matrix, an \code{mcmc.list}, or  a list of list, one of which is an \code{mcmc.list}.
 }
 \description{
 Often, MCMC chains contain columns for parameters that we do not want to examine for a particular purpose. This function subsets MCMC chains to a specific set.
@@ -33,8 +44,14 @@ Often, MCMC chains contain columns for parameters that we do not want to examine
 
 data(mcmc)
 
+# simple subset
 param  <- 'alpha'
-subsetted <- hammer_subset(mcmc, param, i = TRUE)
-head(subsetted)
+simple <- hammer_subset(mcmc, param, i = TRUE)
+head(simple)
+
+# subsetting with different indices for each parameter
+indices <- list(list(i = TRUE), list(j = TRUE))
+params <- c('alpha', 'beta')
+complex <- hammer_subset(mcmc, param = params, indices = indices)
 
 }

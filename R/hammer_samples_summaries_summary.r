@@ -5,7 +5,7 @@
 #' * `hammer_summaries()`: Extracts a list of MCMC summary matrices.
 #' * `hammer_summary()`: Extracts the "all-chains" summary matrix.
 #' 
-#' @param mcmc A list object, or an `mcmc` or `mcmc.list` object.
+#' @inheritParams .mcmc
 #' @param fail Logical: If `TRUE` (default), and the object being searched for cannot be found, then fail with an error. If `FALSE`, then return `NULL`.
 #'
 #' @returns An `mcmc.list` object or a `list`.

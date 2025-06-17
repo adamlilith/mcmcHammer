@@ -45,10 +45,6 @@ You may need to install the `remotes` package first, using:
 
 `install.packages('remotes')`
 
-# Usage
-
-Most function require either an object of class `mcmc` or `mcmc.list`, which are often the format of output from modeling functions in Bayesian packages. However, they can also be created by the `coda` package. 
-
 # Functions
 
 All functions begin with `hammer_` to assist finding them with automated code-completion.

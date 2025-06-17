@@ -13,7 +13,7 @@ hammer_summaries(mcmc, fail = TRUE)
 hammer_summary(mcmc, fail = TRUE)
 }
 \arguments{
-\item{mcmc}{A list object, or an \code{mcmc} or \code{mcmc.list} object.}
+\item{mcmc}{An object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then uses this if it can.}
 
 \item{fail}{Logical: If \code{TRUE} (default), and the object being searched for cannot be found, then fail with an error. If \code{FALSE}, then return \code{NULL}.}
 }

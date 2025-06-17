@@ -2,7 +2,7 @@
 #'
 #' This function takes an `mcmc.list` and `rbind()`'s' them onto one another to create a single, large matrix.
 #'
-#' @param mcmc	An object of class `mcmc`` or `mcmc.list``, or a `list``. If a `list``, the function searches down the first element to see if it can find an `mcmc` or `mcmc.list` object, then plots this if it can.
+#' @inheritParams .mcmc
 #'
 #' @param chains Logical: If `TRUE`, then the output will have a column named `chain` with the chain number of each row.
 #'

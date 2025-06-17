@@ -7,7 +7,7 @@
 hammer_rbind(mcmc, chains = FALSE)
 }
 \arguments{
-\item{mcmc}{An object of class \verb{mcmc`` or }mcmc.list\verb{, or a `list}. If a \verb{list``, the function searches down the first element to see if it can find an }mcmc\code{or}mcmc.list` object, then plots this if it can.}
+\item{mcmc}{An object of class \code{mcmc} or \code{mcmc.list}, \emph{or} a \code{list}. If a \code{list}, the function searches down the first element to see if it can find an \code{mcmc} or \code{mcmc.list} object, then uses this if it can.}
 
 \item{chains}{Logical: If \code{TRUE}, then the output will have a column named \code{chain} with the chain number of each row.}
 }
