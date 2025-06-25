@@ -1,8 +1,8 @@
 Package: mcmcHammer
 Type: Package
 Title: Tools for managing MCMC chains
-Version: 2.0.1
-Date: 2025-06-16
+Version: 2.0.2
+Date: 2025-06-24
 Authors@R: 
 	c(
 		person(
