@@ -26,6 +26,7 @@
 #' indices <- list(list(i = TRUE), list(j = TRUE))
 #' params <- c('alpha', 'beta')
 #' complex <- hammer_subset(mcmc, param = params, indices = indices)
+#' head(complex)
 #'
 #' @export
 hammer_subset <- function(
@@ -83,10 +84,20 @@ hammer_subset <- function(
 	cnames <- colnames(mcmc_samples[[1]])
 	for (n_chain in 1:n_chains) {
 		if (keep) {
-			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , params, drop = FALSE]
+
+			this_chain <- mcmc_samples[[n_chain]]
+			this_chain <- as.matrix(this_chain)
+			this_chain <- this_chain[ , params, drop = FALSE]
+
 		} else {
-			mcmc_samples[[n_chain]] <- mcmc_samples[[n_chain]][ , !(cnames %in% params), drop = FALSE]
+		
+			this_chain <- mcmc_samples[[n_chain]]
+			this_chain <- as.matrix(this_chain)
+			this_chain <- this_chain[ , !(cnames %in% params), drop = FALSE]
+
 		}
+		this_chain <- coda::as.mcmc(this_chain)
+		mcmc_samples[[n_chain]] <- this_chain
 	}
 
 	if (!is.null(mcmc_summaries)) {

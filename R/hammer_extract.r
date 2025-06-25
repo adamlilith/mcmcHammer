@@ -7,6 +7,7 @@
 #' @param param Character vector: Name of the variable(s).
 #'
 #' @inheritParams .ijkl
+#' @inheritParams .indices
 #'
 #' @param stat Character: Indicates which statistic to extract. Options are `'mean'` (default), `'median'`, `'sd'`, `'lower'`, '`upper'`. The `lower` and `upper` options extract the lower and upper 2.5th and 97.5th quantiles, respectively. Partial matching is allowed.
 #'
@@ -15,12 +16,20 @@
 #' @examples
 #'
 #' data(mcmc)
+#'
+#' # simple extraction
 #' hammer_extract(mcmc, param = 'beta', j = 1:3)
 #' hammer_extract(mcmc, param = 'beta', j = 1:3, stat = 'median')
 #' hammer_extract(mcmc, param = 'z_hat', j = TRUE, k = TRUE)
 #'
+#' # complex extraction
+#' indices <- list(list(i = TRUE), list(j = TRUE))
+#' params <- c('alpha', 'beta')
+#' hammer_extract(mcmc, param = params, indices = indices)
+#' hammer_extract(mcmc, param = params, indices = indices, stat = 'median')
+#'
 #' @export hammer_extract
-hammer_extract <- function(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, stat = 'mean', quant = 0.5) {
+hammer_extract <- function(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, indices = NULL, stat = 'mean', quant = 0.5) {
 
 	if (FALSE) {
 
@@ -30,6 +39,27 @@ hammer_extract <- function(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, 
 		k <- NULL
 		l <- NULL
 
+	}
+
+	if (any(c(!is.null(i), !is.null(j), !is.null(k), !is.null(l))) & !is.null(indices)) stop('You cannot use `i`, `j`, `k`, or `l` *and* `indices`.')
+
+	if (!is.null(indices)) {
+	
+		for (count_param in seq_along(param)) {
+		
+			args <- list(mcmc = mcmc, param = param[count_param], stat = stat, quant = quant)
+			args <- c(args, indices[[count_param]])
+			this_out <- do.call(hammer_extract, args = args)
+
+			if (count_param == 1) {
+				out <- this_out
+			} else {
+				out <- c(out, this_out)
+			}
+		
+		}
+		return(out)
+	
 	}
 
 	mcmc_summary <- hammer_summary(mcmc, fail = TRUE)

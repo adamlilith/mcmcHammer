@@ -1,3 +1,7 @@
+# mcmHammer 2.0.2 (2025-06-24)
+o `hammer_extract()` now allows extracting multiple parameters with different index patterns using the `indices` argument.  
+o Fixed sometimes-fatal bug in `hammer_subset()`.  
+
 # mcmHammer 2.0.1 (2025-06-16)
 o `hammer_subset()` now allows selecting multiple parameters with different index patterns using the `indices` argument.  
 o Fix bug in `hammer_summarize()` where `$summary` tag was left out and summaries put into top-level element.  
