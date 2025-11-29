@@ -56,6 +56,7 @@ hammer_samples <- function(mcmc, fail = TRUE) {
 		}
 	
 	}
+	out <- coda::as.mcmc.list(out)
 	out
 	
 }
