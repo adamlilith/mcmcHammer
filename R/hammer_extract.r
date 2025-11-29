@@ -38,6 +38,9 @@ hammer_extract <- function(mcmc, param, i = NULL, j = NULL, k = NULL, l = NULL, 
 		j <- NULL
 		k <- NULL
 		l <- NULL
+		stat <- 'mean'
+		quant <- 0.5
+		indices <- NULL
 
 	}
 
