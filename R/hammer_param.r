@@ -62,6 +62,7 @@ hammer_param <- function(
 		mcmc_samples <- NULL
 	} else if (!inherits(mcmc, 'mcmc.list')) {
 		mcmc_samples <- hammer_samples(mcmc, fail = TRUE)
+		mcmc_samples <- coda::as.mcmc.list(mcmc_samples)
 	} else {
 		mcmc_samples <- mcmc
 	}
