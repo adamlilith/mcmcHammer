@@ -10,6 +10,7 @@
 #' * [hammer_samples()]: Extract an `mcmc.list` object with MCMC samples.
 #' * [hammer_summaries()]: Extract an "summary" list of matrices.
 #' * [hammer_summary()]: Extract an "all=chains" summary matrix.
+#' * [hammer_stack()]: Combine MCMC samples using [rbind()].
 #' * [hammer_subset()]: Subset MCMC chains by variable name and/or index.
 
 #' ## MCMC chain manipulation
@@ -18,6 +19,7 @@
 #' * [hammer_rbind()]: "Stack" MCMC chains into a single matrix.
 #'
 #' ## Helper functions:
+#' * [hammer_n_chains()]: Number of chains.
 #' * [hammer_param()]: Match variables names to MCMC columns.
 #' * [hammer_resummarize()]: Per-chain and all-chains summary matrices.
 #'
