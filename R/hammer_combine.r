@@ -70,11 +70,11 @@ hammer_combine <- function(...) {
 				if (any(out_names != new_names)) stop('Column names do not match across objects. Are these from the same MCMC model?')
 				
 				out$samples$TEMP <- x[[i]]$samples
-				out$summary$TEMP <- x[[i]]$summary
+				# out$summary$TEMP <- x[[i]]$summary
 
 				n_chains_out <- n_chains_out + 1
 				names(out$samples)[length(out$samples)] <- paste0('chain', n_chains_out)
-				names(out$summary)[length(out$summary)] <- paste0('chain', n_chains_out)
+				# names(out$summary)[length(out$summary)] <- paste0('chain', n_chains_out)
 			
 			# next input is an mcmc.list
 			} else if (inherits(x[[i]][[1]], 'mcmc.list')) {
@@ -103,8 +103,8 @@ hammer_combine <- function(...) {
 	
 	}
 	
-	summaries <- hammer_resummarize(out)
-	out$summary <- summaries
+	out <- hammer_resummarize(out)
+	out$samples <- coda::as.mcmc.list(out$samples)
 	out
 
 }
