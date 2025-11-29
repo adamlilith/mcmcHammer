@@ -52,6 +52,7 @@ All functions begin with `hammer_` to assist finding them with automated code-co
 ### Extraction and subsetting
 * `hammer_extract()`: Posterior summary statistics (mean, median, S.D., lower/upper quantiles).
 * `hammer_samples()`: Get the "samples" part of an MCMC list.
+* `hammer_stack()`: Combine MCMC samples using `rbind()`.
 * `hammer_summaries()`: Get the by-chain summary from an MCMC list.
 * `hammer_summary()`: Get the "`all.chains`" summary from an MCMC list.
 * `hammer_subset()`: Subset MCMC chains by variable name and/or index.
@@ -62,6 +63,7 @@ All functions begin with `hammer_` to assist finding them with automated code-co
 * `hammer_rbind()`: "Stack" MCMC chains into a single matrix.
 
 ### Helper functions
+* `hammer_n_chains()`: Number of chains.
 * `hammer_param()`: Match variables names to MCMC columns.
 * `hammer_resummarize()` / `hammer_resummarise()`: Per-chain and all-chains summary matrices.
 
