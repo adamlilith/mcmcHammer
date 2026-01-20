@@ -11,13 +11,13 @@
 #' @examples
 #' 
 #' data(mcmc)
-#' cbinded <- hammer_cbind(mcmc)
+#' cbinded <- mc_cbind(mcmc)
 #' head(cbinded)
 #' dim(cbinded)
 #'
-#' @rdname hammer_cbind
+#' @rdname mc_cbind
 #' @export
-hammer_cbind <- function(..., summarize = TRUE) {
+mc_cbind <- function(..., summarize = TRUE) {
 
 	mcmcs <- list(...)
 	out <- mcmcs[[1]]
@@ -88,7 +88,7 @@ hammer_cbind <- function(..., summarize = TRUE) {
 		if (summarize & format == 'list') {
 			if (any(names(out) == 'summary')) {
 				out$summary <- NULL
-				out <- hammer_resummarize(out)
+				out <- mc_resummarize(out)
 			}
 		} else if (format == 'list') {
 			if (any(names(out) == 'summary')) out$summary <- NULL

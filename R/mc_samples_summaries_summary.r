@@ -1,9 +1,9 @@
 #' Extracts a "samples" mcmc.list from a list, or the "summary" of an mcmc.list
 #'
 #' These functions extract the `samples` or `summary` part of a list object:
-#' * `hammer_samples()`: Extracts a list of MCMC samples.
-#' * `hammer_summaries()`: Extracts a list of MCMC summary matrices.
-#' * `hammer_summary()`: Extracts the "all-chains" summary matrix.
+#' * `mc_samples()`: Extracts a list of MCMC samples.
+#' * `mc_summaries()`: Extracts a list of MCMC summary matrices.
+#' * `mc_summary()`: Extracts the "all-chains" summary matrix.
 #' 
 #' @inheritParams .mcmc
 #' @param fail Logical: If `TRUE` (default), and the object being searched for cannot be found, then fail with an error. If `FALSE`, then return `NULL`.
@@ -13,12 +13,12 @@
 #' @examples
 #'
 #' data(mcmc)
-#' str(hammer_samples(mcmc))
-#' str(hammer_summaries(mcmc))
-#' hammer_summary(mcmc)
+#' str(mc_samples(mcmc))
+#' str(mc_summaries(mcmc))
+#' mc_summary(mcmc)
 #'
-#' @export hammer_samples
-hammer_samples <- function(mcmc, fail = TRUE) {
+#' @export mc_samples
+mc_samples <- function(mcmc, fail = TRUE) {
 
 	if (inherits(mcmc, 'mcmc')) {
 		out <- list(chain1 = mcmc)
@@ -56,14 +56,15 @@ hammer_samples <- function(mcmc, fail = TRUE) {
 		}
 	
 	}
+	out <- coda::as.mcmc.list(out)
 	out
 	
 }
 
-#' @describeIn hammer_samples Extracts a "samples" list from a list
-#' @aliases hammer_summaries
+#' @describeIn mc_samples Extracts a "samples" list from a list
+#' @aliases mc_summaries
 #' @export
-hammer_summaries <- function(mcmc, fail = TRUE) {
+mc_summaries <- function(mcmc, fail = TRUE) {
 
 	n_elements <- length(mcmc)
 	if (n_elements == 0) {
@@ -96,10 +97,10 @@ hammer_summaries <- function(mcmc, fail = TRUE) {
 	
 }
 
-#' @describeIn hammer_samples Extracts a grand "summary" matrix from a list
-#' @aliases hammer_summary
+#' @describeIn mc_samples Extracts a grand "summary" matrix from a list
+#' @aliases mc_summary
 #' @export
-hammer_summary <- function(mcmc, fail = TRUE) {
+mc_summary <- function(mcmc, fail = TRUE) {
 
 	n_elements <- length(mcmc)
 	if (n_elements == 0) {

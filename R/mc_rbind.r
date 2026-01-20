@@ -11,15 +11,15 @@
 #' @examples
 #' 
 #' data(mcmc)
-#' rbinded <- hammer_rbind(mcmc)
+#' rbinded <- mc_rbind(mcmc)
 #' head(rbinded)
 #' dim(rbinded)
 #'
-#' @rdname hammer_rbind
+#' @rdname mc_rbind
 #' @export
-hammer_rbind <- function(mcmc, chains = FALSE) {
+mc_rbind <- function(mcmc, chains = FALSE) {
 
-	mcmc_chains <- hammer_samples(mcmc, fail = TRUE)
+	mcmc_chains <- mc_samples(mcmc, fail = TRUE)
 
 	out <- mcmc_chains[[1]]
 	if (chains) {

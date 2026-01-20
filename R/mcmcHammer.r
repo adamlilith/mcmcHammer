@@ -6,20 +6,24 @@
 #'
 #' @details
 #' ## Extraction and subsetting
-#' * [hammer_extract()]: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
-#' * [hammer_samples()]: Extract an `mcmc.list` object with MCMC samples.
-#' * [hammer_summaries()]: Extract an "summary" list of matrices.
-#' * [hammer_summary()]: Extract an "all=chains" summary matrix.
-#' * [hammer_subset()]: Subset MCMC chains by variable name and/or index.
+#' * [mc_extract()]: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
+#' * [mc_samples()]: Extract an `mcmc.list` object with MCMC samples.
+#' * [mc_summaries()]: Extract an "summary" list of matrices.
+#' * [mc_summary()]: Extract an "all=chains" summary matrix.
+#' * [mc_stack()]: Combine MCMC samples using [rbind()].
+#' * [mc_subset()]: Subset MCMC chains by variable name and/or index.
+#' * [mc_subset_chains()]: Select specific chains in an MCMC object.
 
 #' ## MCMC chain manipulation
-#' * [hammer_cbind()]: Combine side-to-side compatible `mcmc`, `mcmc.list`, or `list`s of `mcmc.list`s.
-#' * [hammer_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
-#' * [hammer_rbind()]: "Stack" MCMC chains into a single matrix.
+#' * [mc_cbind()]: Combine side-to-side compatible `mcmc`, `mcmc.list`, or `list`s of `mcmc.list`s.
+#' * [mc_combine()]: Combine two or more MCMC objects and calculate new summary statistics.
+#' * [mc_rbind()]: "Stack" MCMC chains into a single matrix.
+#' * [mc_rename()]: Rename one or more variables in an `mcmc` object.
 #'
 #' ## Helper functions:
-#' * [hammer_param()]: Match variables names to MCMC columns.
-#' * [hammer_resummarize()]: Per-chain and all-chains summary matrices.
+#' * [mc_n_chains()]: Number of chains.
+#' * [mc_param()]: Match variables names to MCMC columns.
+#' * [mc_resummarize()]: Per-chain and all-chains summary matrices.
 #'
 #' ## Example data
 #' * `mcmc`: An "MCMC `list`" similar to output from **rstan**, **rjags**, and **nimble**.
