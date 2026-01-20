@@ -17,11 +17,11 @@
 #' @examples
 #'
 #' data(mcmc)
-#' summ <- hammer_resummarize(mcmc)
+#' summ <- mc_resummarize(mcmc)
 #' str(summ)
 #'
 #' @export
-hammer_resummarize <- function(mcmc, na.rm = FALSE) {
+mc_resummarize <- function(mcmc, na.rm = FALSE) {
 
 	if (inherits(mcmc, 'mcmc')) {
 		mcmc <- list(samples = list(mcmc))

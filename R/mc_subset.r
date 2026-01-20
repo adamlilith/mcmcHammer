@@ -21,17 +21,17 @@
 #' 
 #' # simple subset
 #' param  <- 'alpha'
-#' simple <- hammer_subset(mcmc, param, i = TRUE)
+#' simple <- mc_subset(mcmc, param, i = TRUE)
 #' head(simple)
 #'
 #' # subsetting with different indices for each parameter
 #' indices <- list(list(i = TRUE), list(j = TRUE))
 #' params <- c('alpha', 'beta')
-#' complex <- hammer_subset(mcmc, param = params, indices = indices)
+#' complex <- mc_subset(mcmc, param = params, indices = indices)
 #' head(complex)
 #'
 #' @export
-hammer_subset <- function(
+mc_subset <- function(
 	mcmc,
 	param,
 	i = NULL,
@@ -53,6 +53,7 @@ hammer_subset <- function(
 		l <- NULL
 		indices <- NULL
 		keep <- TRUE
+		na.rm <- FALSE
 
 	}
 
@@ -66,12 +67,12 @@ hammer_subset <- function(
 		
 			args <- list(mcmc = mcmc, param = param[count_param], keep = keep)
 			args <- c(args, indices[[count_param]])
-			subsetted <- do.call(hammer_subset, args = args)
+			subsetted <- do.call(mc_subset, args = args)
 
 			if (count_param == 1) {
 				out <- subsetted
 			} else {
-				out <- hammer_cbind(out, subsetted)
+				out <- mc_cbind(out, subsetted)
 			}
 		
 		}
@@ -79,14 +80,13 @@ hammer_subset <- function(
 	
 	}
 
-	mcmc_samples <- hammer_samples(mcmc)
-	mcmc_summaries <- hammer_summaries(mcmc, fail = FALSE)
+	mcmc_samples <- mc_samples(mcmc)
+	if (!inherits(mcmc_samples, 'mcmc.list')) mcmc_samples <- coda::as.mcmc.list(mcmc_samples)
 
-	if (!inherits(mcmc_samples, 'mcmc.list')) mcmc_samples <- as.mcmc.list(mcmc_samples)
+	params <- mc_param(mcmc = mcmc, param = param, i = i, j = j, k = k, l = l)
+	if (length(params) == 0) stop('Cannot match `params` to any values in the `mcmc` object.')
 
-	params <- hammer_param(param, i = i, j = j, k = k, l = l, mcmc = mcmc)
-
-	n_chains <- hammer_n_chains(mcmc_samples)
+	n_chains <- mc_n_chains(mcmc_samples)
 	cnames <- colnames(mcmc_samples[[1]])
 	for (n_chain in 1:n_chains) {
 		if (keep) {
@@ -110,17 +110,25 @@ hammer_subset <- function(
 		mcmc_samples[[n_chain]] <- this_chain
 	}
 
+	# mcmc_summaries <- mc_summaries(mcmc, fail = FALSE)
+	mcmc_summaries <- mcmc$summary
 	if (!is.null(mcmc_summaries)) {
-		mcmc_summaries <- hammer_resummarize(mcmc_samples, na.rm = na.rm)
-		# n <- length(mcmc_summaries)
-		# cnames <- colnames(mcmc_samples[[1]])
-		# for (n_chain in 1:n) {
-		# 	if (keep) {
-		# 		mcmc_summaries[[n_chain]] <- mcmc_summaries[[n_chain]][params, , drop = FALSE]
-		# 	} else {
-		# 		mcmc_summaries[[n_chain]] <- mcmc_summaries[[n_chain]][!(cnames %in% params), , drop = FALSE]
-		# 	}
-		# }
+
+		if (is.matrix(mcmc_summaries)) {
+			mcmc_summaries <- mcmc_summaries[params, , drop = FALSE]
+		} else {
+		
+			n <- length(mcmc_summaries)
+			cnames <- colnames(mcmc_samples[[1]])
+			for (count in 1:n) {
+				if (keep) {
+					mcmc_summaries[[count]] <- mcmc_summaries[[count]][params, , drop = FALSE]
+				} else {
+					mcmc_summaries[[count]] <- mcmc_summaries[[count]][!(cnames %in% params), , drop = FALSE]
+				}
+			}
+
+		}
 	}
 
 	list(

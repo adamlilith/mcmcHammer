@@ -9,12 +9,12 @@
 #' @examples
 #'
 #' data(mcmc)
-#' hammer_n_chains(mcmc)
+#' mc_n_chains(mcmc)
 #'
 #' @export
-hammer_n_chains <- function(mcmc) {
+mc_n_chains <- function(mcmc) {
 
-	samps <- hammer_samples(mcmc)
+	samps <- mc_samples(mcmc)
 	if (inherits(samps, c('mcmc.list', 'list'))) {
 		out <- length(samps)
 	} else if (inherits(samps, 'mcmc')) {

@@ -15,7 +15,7 @@ NULL
 #' @name .indices
 #' @title Shared argument(s)
 #'
-#' @param indices A `list` of `lists`. If you want to select multiple parameters, which each have their own indexing (`i`, `j`, `k`, and/or `l`), you can specify them with this argument. Each sub-`list` should have the indices you wish to use for the given value of `param`. Sub-`list`s will be matched with the respective value of `param`. For example, if you want to select parameters `alpha0`, `alpha1` and `beta[1]` and `beta[2]` from an `mcmc` chain, you could use `hammer_subset(mcmc, param = c('alpha', 'beta'), indices = list(list(i = 0:1), list(j = 1:2)))`. You can't use `i`, `j`, `k`, or `l` in combination with `indices`.
+#' @param indices A `list` of `lists`. If you want to select multiple parameters, which each have their own indexing (`i`, `j`, `k`, and/or `l`), you can specify them with this argument. Each sub-`list` should have the indices you wish to use for the given value of `param`. Sub-`list`s will be matched with the respective value of `param`. For example, if you want to select parameters `alpha0`, `alpha1` and `beta[1]` and `beta[2]` from an `mcmc` chain, you could use `mc_subset(mcmc, param = c('alpha', 'beta'), indices = list(list(i = 0:1), list(j = 1:2)))`. You can't use `i`, `j`, `k`, or `l` in combination with `indices`.
 NULL
 
 #' @name .mcmc

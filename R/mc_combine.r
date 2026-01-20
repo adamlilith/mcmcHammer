@@ -3,6 +3,7 @@
 #' @description Sometimes, you need to run different MCMC chains in different instances of **R**, then want to combine them. This function does that by creating a `list`, typical of outputs from **JAGS**, **nimble**, **stan**, and other MCMC sampler software.
 #' 
 #' @param ... Two or more `list`s with `mcmc.list` objects therein, or a `list` with an `mcmc` object (i.e., a single chain).
+#' @param na.rm Logical: If `FALSE` (default), then summary statistics will be `NA` if any value in any iteration is `NA` (and it probably should be `NA`). However, if you set this to `TRUE`, then `NA` values are ignored.
 #'
 #' @returns A `list` with the following structure:
 #' ```
@@ -23,13 +24,17 @@
 #' @examples
 #'
 #' data(mcmc)
-#' combo <- hammer_combine(mcmc, mcmc) # combine "mcmc" with itself
+#' combo <- mc_combine(mcmc, mcmc) # combine "mcmc" with itself
 #' str(combo, 2)
 #'
 #' @export
-hammer_combine <- function(...) {
+mc_combine <- function(..., na.rm = FALSE) {
 
 	x <- list(...)
+	if (any(names(x) == 'na.rm')) {
+		na.rm <- x$na.rm
+		x$na.rm <- NULL
+	}
 	
 	# add first object
 	# single chain... first object is an mcmc
@@ -103,7 +108,7 @@ hammer_combine <- function(...) {
 	
 	}
 	
-	out <- hammer_resummarize(out)
+	out <- mc_resummarize(out, na.rm = na.rm)
 	out$samples <- coda::as.mcmc.list(out$samples)
 	out
 

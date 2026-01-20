@@ -12,26 +12,30 @@ Functions for analyzing MCMC chains. Includes trace plots and density plots. Thi
 Find a bug? Please report it and how it occurred on \href{https://github.com/adamlilith/mcmcHammer/issues}{GitHub}.
 \subsection{Extraction and subsetting}{
 \itemize{
-\item \code{\link[=hammer_extract]{hammer_extract()}}: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
-\item \code{\link[=hammer_samples]{hammer_samples()}}: Extract an \code{mcmc.list} object with MCMC samples.
-\item \code{\link[=hammer_summaries]{hammer_summaries()}}: Extract an "summary" list of matrices.
-\item \code{\link[=hammer_summary]{hammer_summary()}}: Extract an "all=chains" summary matrix.
-\item \code{\link[=hammer_subset]{hammer_subset()}}: Subset MCMC chains by variable name and/or index.
+\item \code{\link[=mc_extract]{mc_extract()}}: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
+\item \code{\link[=mc_samples]{mc_samples()}}: Extract an \code{mcmc.list} object with MCMC samples.
+\item \code{\link[=mc_summaries]{mc_summaries()}}: Extract an "summary" list of matrices.
+\item \code{\link[=mc_summary]{mc_summary()}}: Extract an "all=chains" summary matrix.
+\item \code{\link[=mc_stack]{mc_stack()}}: Combine MCMC samples using \code{\link[=rbind]{rbind()}}.
+\item \code{\link[=mc_subset]{mc_subset()}}: Subset MCMC chains by variable name and/or index.
+\item \code{\link[=mc_subset_chains]{mc_subset_chains()}}: Select specific chains in an MCMC object.
 }
 }
 
 \subsection{MCMC chain manipulation}{
 \itemize{
-\item \code{\link[=hammer_cbind]{hammer_cbind()}}: Combine side-to-side compatible \code{mcmc}, \code{mcmc.list}, or \code{list}s of \code{mcmc.list}s.
-\item \code{\link[=hammer_combine]{hammer_combine()}}: Combine two or more MCMC objects and calculate new summary statistics.
-\item \code{\link[=hammer_rbind]{hammer_rbind()}}: "Stack" MCMC chains into a single matrix.
+\item \code{\link[=mc_cbind]{mc_cbind()}}: Combine side-to-side compatible \code{mcmc}, \code{mcmc.list}, or \code{list}s of \code{mcmc.list}s.
+\item \code{\link[=mc_combine]{mc_combine()}}: Combine two or more MCMC objects and calculate new summary statistics.
+\item \code{\link[=mc_rbind]{mc_rbind()}}: "Stack" MCMC chains into a single matrix.
+\item \code{\link[=mc_rename]{mc_rename()}}: Rename one or more variables in an \code{mcmc} object.
 }
 }
 
 \subsection{Helper functions:}{
 \itemize{
-\item \code{\link[=hammer_param]{hammer_param()}}: Match variables names to MCMC columns.
-\item \code{\link[=hammer_resummarize]{hammer_resummarize()}}: Per-chain and all-chains summary matrices.
+\item \code{\link[=mc_n_chains]{mc_n_chains()}}: Number of chains.
+\item \code{\link[=mc_param]{mc_param()}}: Match variables names to MCMC columns.
+\item \code{\link[=mc_resummarize]{mc_resummarize()}}: Per-chain and all-chains summary matrices.
 }
 }
 

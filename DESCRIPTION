@@ -1,8 +1,8 @@
 Package: mcmcHammer
 Type: Package
 Title: Tools for managing MCMC chains
-Version: 2.0.2
-Date: 2025-06-24
+Version: 3.0.0
+Date: 2026-01-19
 Authors@R: 
 	c(
 		person(
@@ -15,13 +15,14 @@ Authors@R:
 	)
 Maintainer: Adam B. Smith <adam.smith@mobot.org>
 Description: Management of Monte Carlo Markov Chains produced by packages like
-	'rstan', 'nimble', and 'rjags'. Makes extraction, subsetting, combining
-	chains and other manipulations easier for humans, especially for variables
-	that have indices like "gamma0", "gamma1", and "gamma2", or "beta[1, 1]",
-	"beta[1, 2]", "beta[1, 3]", and similar.
+	'rstan', 'nimble', and 'rjags'. Makes extraction, subsetting, renaming,
+	combining chains and other manipulations easier for humans, especially for 		
+	variables that have indices like "gamma0", "gamma1", and "gamma2", or
+	"beta[1, 1]", "beta[1, 2]", "beta[1, 3]", and similar.
 Depends:
 	R (>= 4.0.0)
 Suggests:
+	coda,
 	omnibus
 Roxygen: list(markdown = TRUE)
 License: GPL (>=3)
@@ -31,4 +32,4 @@ BugReports: https://github.com/adamlilith/mcmcHammer/issues
 Encoding: UTF-8
 LazyData: true
 LazyLoad: yes
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
