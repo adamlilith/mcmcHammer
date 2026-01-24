@@ -3,7 +3,7 @@ Tools for managing MCMC chains
 
 <img align="right" src="mcmcHammer.png" height="250"/>
 
-**mcmcHammer** is a "helper" package for working with Monte Carlo Markov Chain objects produced by popular Bayesian **R** packages like **rstan**, **rjags**, and **nimble**. These package produce `list` objects that have this kind of structure:
+**mcmcHammer** is a "helper" package for working with Monte Carlo Markov Chain objects produced by popular Bayesian **R** packages like **rstan**, **rjags**, and **nimble**. These packages produce `list` objects that have this kind of structure:
 
 ```
 mcmc$samples:
