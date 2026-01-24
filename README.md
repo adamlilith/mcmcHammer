@@ -17,7 +17,7 @@ mcmc$summary$all.chains <matrix of summary statistics for all chains>
 
 Functions in this package do *not* create plots or calculate statistics. Rather, its specialty is making extraction of posteriors, subsetting chains, and combining MCMC objects easy (no need to look up regex expressions, no need to do `paste(beta[', 1:207, '])'`, etc.).
 
-As an example example, assume your set of MCMC chains have variables named `beta0`, `beta1`, and `beta2`, as well as `gamma[1, 1]`, `gamma[1, 2]`, `gamma[2, 1]` and `gamma[2, 2]`, in addition to thousands of other variables. You can easily subset the chains to just these variables:
+As an example, assume your set of MCMC chains have variables named `beta0`, `beta1`, and `beta2`, as well as `gamma[1, 1]`, `gamma[1, 2]`, `gamma[2, 1]` and `gamma[2, 2]`, in addition to thousands of other variables. You can easily subset the chains to just these variables:
 
 `mc_subset(mcmc, 'beta', i = 0:2)`  
 `mc_subset(mcmc, 'gamma', j = 1:2, k = 1:2)`  
