@@ -66,6 +66,7 @@ All functions begin with `mc_` to assist finding them with automated code-comple
 
 ### Helper functions
 * `mc_n_chains()`: Number of chains.
+* `mc_n_iter()`: Number of iterations.
 * `mc_param()`: Match variables names to MCMC columns.
 * `mc_resummarize()` / `mc_resummarise()`: Per-chain and all-chains summary matrices.
 
