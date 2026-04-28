@@ -115,7 +115,12 @@ mc_subset <- function(
 	if (!is.null(mcmc_summaries)) {
 
 		if (is.matrix(mcmc_summaries)) {
-			mcmc_summaries <- mcmc_summaries[params, , drop = FALSE]
+			if (keep) {
+				mcmc_summaries <- mcmc_summaries[params, , drop = FALSE]
+			} else {
+				rnames <- rownames(mcmc_summaries)
+				mcmc_summaries <- mcmc_summaries[!(rnames %in% params), , drop = FALSE]
+			}
 		} else {
 		
 			n <- length(mcmc_summaries)
