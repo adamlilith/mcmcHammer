@@ -2,8 +2,12 @@
 
 export(mc_cbind)
 export(mc_combine)
+export(mc_combine_rolling_sets)
 export(mc_extract)
 export(mc_n_chains)
+export(mc_n_iter)
+export(mc_nimble_check)
+export(mc_nimble_rolling)
 export(mc_param)
 export(mc_rbind)
 export(mc_rename)
