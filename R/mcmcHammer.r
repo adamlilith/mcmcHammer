@@ -5,6 +5,10 @@
 #' Find a bug? Please report it and how it occurred on [GitHub](https://github.com/adamlilith/mcmcHammer/issues).
 #'
 #' @details
+#' ## Restartable **nimble** models
+#' [mc_rolling_nimble()]: Run a restartable **nimble** model.
+#' [mc_combine_rolling_sets()]: Combine a set of MCMC iterations created by `mc_rolling_nimble()`.
+
 #' ## Extraction and subsetting
 #' * [mc_extract()]: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
 #' * [mc_samples()]: Extract an `mcmc.list` object with MCMC samples.
