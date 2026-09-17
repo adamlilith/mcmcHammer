@@ -12,6 +12,8 @@
 #' @param keep Logical: If `TRUE` (default), columns with names in `param` are retained. If `FALSE`, they are discarded. This cannot be set to `FALSE` when the `indices` argument is used.
 #'
 #' @param na.rm Logical: If `FALSE` (default), then summary statistics will be `NA` if any value in any iteration is `NA` (and it probably should be `NA`). However, if you set this to `TRUE`, then `NA` values are ignored.
+#' 
+#' @param resummarize,resummarise Logical: If `TRUE` (default), re-calculate the "summary" of MCMC chains after subsetting.
 #'
 #' @returns An `mcmc` matrix, an `mcmc.list`, or  a list of list, one of which is an `mcmc.list`.
 #'
@@ -40,7 +42,8 @@ mc_subset <- function(
 	l = NULL,
 	indices = NULL,
 	keep = TRUE,
-	na.rm = FALSE
+	na.rm = FALSE,
+	resummarize = TRUE
 ) {
 
 	if (FALSE) {
@@ -109,36 +112,8 @@ mc_subset <- function(
 		this_chain <- coda::as.mcmc(this_chain)
 		mcmc_samples[[n_chain]] <- this_chain
 	}
-
-	# mcmc_summaries <- mc_summaries(mcmc, fail = FALSE)
-	mcmc_summaries <- mcmc$summary
-	if (!is.null(mcmc_summaries)) {
-
-		if (is.matrix(mcmc_summaries)) {
-			if (keep) {
-				mcmc_summaries <- mcmc_summaries[params, , drop = FALSE]
-			} else {
-				rnames <- rownames(mcmc_summaries)
-				mcmc_summaries <- mcmc_summaries[!(rnames %in% params), , drop = FALSE]
-			}
-		} else {
-		
-			n <- length(mcmc_summaries)
-			cnames <- colnames(mcmc_samples[[1]])
-			for (count in 1:n) {
-				if (keep) {
-					mcmc_summaries[[count]] <- mcmc_summaries[[count]][params, , drop = FALSE]
-				} else {
-					mcmc_summaries[[count]] <- mcmc_summaries[[count]][!(cnames %in% params), , drop = FALSE]
-				}
-			}
-
-		}
-	}
-
-	list(
-		samples = mcmc_samples,
-		summary = mcmc_summaries
-	)
+	mcmc$samples <- mcmc_samples
+	if (resummarize) mcmc <- mc_resummarize(mcmc, na.rm = na.rm)
+	mcmc
 
 }
