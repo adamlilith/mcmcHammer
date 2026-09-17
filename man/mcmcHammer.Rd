@@ -10,6 +10,13 @@ Functions for analyzing MCMC chains. Includes trace plots and density plots. Thi
 }
 \details{
 Find a bug? Please report it and how it occurred on \href{https://github.com/adamlilith/mcmcHammer/issues}{GitHub}.
+\subsection{Restartable \strong{nimble} models}{
+
+\code{\link[=mc_nimble_check]{mc_nimble_check()}}: Check a \strong{nimble} model for nodes with \code{NaN} or infinite likelihoods.
+\code{\link[=mc_nimble_rolling]{mc_nimble_rolling()}}: Run a restartable \strong{nimble} model.
+\code{\link[=mc_combine_rolling_sets]{mc_combine_rolling_sets()}}: Combine a set of MCMC iterations created by \code{mc_nimble_rolling()}.
+}
+
 \subsection{Extraction and subsetting}{
 \itemize{
 \item \code{\link[=mc_extract]{mc_extract()}}: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
@@ -34,6 +41,7 @@ Find a bug? Please report it and how it occurred on \href{https://github.com/ada
 \subsection{Helper functions:}{
 \itemize{
 \item \code{\link[=mc_n_chains]{mc_n_chains()}}: Number of chains.
+\item \code{\link[=mc_n_iter]{mc_n_iter()}}: Number of iterations.
 \item \code{\link[=mc_param]{mc_param()}}: Match variables names to MCMC columns.
 \item \code{\link[=mc_resummarize]{mc_resummarize()}}: Per-chain and all-chains summary matrices.
 }
