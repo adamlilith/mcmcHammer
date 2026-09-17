@@ -27,10 +27,10 @@
 #' 
 #' @seealso [mc_combine_rolling_sets()] for combining the MCMC set files into a single MCMC chain.
 #' 
-#' @example man/examples/ex_mc_rolling_nimble.r
+#' @example man/examples/ex_mc_nimble_rolling.r
 #' 
 #' @export
-mc_rolling_nimble <- function(
+mc_nimble_rolling <- function(
 	model_dir,
 	code,
 	config,
