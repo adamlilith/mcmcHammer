@@ -5,6 +5,11 @@
 #' Find a bug? Please report it and how it occurred on [GitHub](https://github.com/adamlilith/mcmcHammer/issues).
 #'
 #' @details
+#' ## Restartable **nimble** models
+#' [mc_nimble_check()]: Check a **nimble** model for nodes with `NaN` or infinite likelihoods.
+#' [mc_nimble_rolling()]: Run a restartable **nimble** model.
+#' [mc_combine_rolling_sets()]: Combine a set of MCMC iterations created by `mc_nimble_rolling()`.
+
 #' ## Extraction and subsetting
 #' * [mc_extract()]: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.
 #' * [mc_samples()]: Extract an `mcmc.list` object with MCMC samples.
@@ -22,6 +27,7 @@
 #'
 #' ## Helper functions:
 #' * [mc_n_chains()]: Number of chains.
+#' * [mc_n_iter()]: Number of iterations.
 #' * [mc_param()]: Match variables names to MCMC columns.
 #' * [mc_resummarize()]: Per-chain and all-chains summary matrices.
 #'

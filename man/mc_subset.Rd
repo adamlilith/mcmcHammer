@@ -13,7 +13,8 @@ mc_subset(
   l = NULL,
   indices = NULL,
   keep = TRUE,
-  na.rm = FALSE
+  na.rm = FALSE,
+  resummarize = TRUE
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ You must specify all of the indices that would appear in square brackets. For ex
 \item{keep}{Logical: If \code{TRUE} (default), columns with names in \code{param} are retained. If \code{FALSE}, they are discarded. This cannot be set to \code{FALSE} when the \code{indices} argument is used.}
 
 \item{na.rm}{Logical: If \code{FALSE} (default), then summary statistics will be \code{NA} if any value in any iteration is \code{NA} (and it probably should be \code{NA}). However, if you set this to \code{TRUE}, then \code{NA} values are ignored.}
+
+\item{resummarize, resummarise}{Logical: If \code{TRUE} (default), re-calculate the "summary" of MCMC chains after subsetting.}
 }
 \value{
 An \code{mcmc} matrix, an \code{mcmc.list}, or  a list of list, one of which is an \code{mcmc.list}.

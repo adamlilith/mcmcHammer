@@ -116,7 +116,10 @@ mc_summary <- function(mcmc, fail = TRUE) {
 	while (!found_summary & i <= n_elements) {
 	
 		if (names(mcmc)[i] == 'summary') {
-			if (any(names(mcmc[[i]]) == 'all.chains')) {
+			if (inherits(mcmc[[i]], 'matrix')) {
+				out <- mcmc[[i]]
+				found_summary <- TRUE
+			} else if (any(names(mcmc[[i]]) == 'all.chains')) {
 				out <- mcmc[[i]]$all.chains
 				found_summary <- TRUE
 			}
