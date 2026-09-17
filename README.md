@@ -53,9 +53,10 @@ You may need to install the `remotes` package first, using:
 
 All functions begin with `mc_` to assist finding them with automated code-completion.
 
-### Restartable **nimble** models
-* `mc_rolling_nimble()`: Run a restartable **nimble** model
-* `mc_combine_rolling_sets()`: Combine a set of MCMC iterations created by `mc_rolling_nimble()`
+### Restartable **nimble** models and helpful stuff
+* `mc_combine_rolling_sets()`: Combine a set of MCMC iterations created by `mc_nimble_rolling()`.
+* `mc_nimble_check()`: Check a **nimble** model for nodes with `NaN` or infinite likelihoods.
+* `mc_nimble_rolling()`: Run a restartable **nimble** model.
 
 ### Extraction and subsetting
 * `mc_extract()`: Posterior summary statistics (mean, median, S.D., lower/upper quantiles).
