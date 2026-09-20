@@ -1,6 +1,6 @@
 #' Run a restartable 'nimble' model
 #' 
-#' This function runs a restartable **nimble** model. Assuming it is starting "fresh" where no prior MCMC samples have been created, it first creates an output folder, generates MCMC samples, then saves them in a file that has the format `chain_set_XYZ.rds` where `XYZ` indicates the set number. The first set will thus be saved in the file `chain_set_001.rds`, the second in `chain_set_002.rds`, and so on. Successive sets are generated using the state of the sampler at the end of the previous set. This way, sets can be combined (e.g., using [mc_combine_rolling_sets()]) to create a coherent chain. The state of the sampler is saved in files named like `.model_state_of_set_001.rds`, `.model_state_of_set_002.rds`, etc.
+#' This function runs a restartable **nimble** model. Assuming it is starting "fresh" where no prior MCMC samples have been created, it first creates an output folder, generates MCMC samples, then saves them in a file that has the format `chain_set_XYZ.rds` where `XYZ` indicates the set number. The first set will thus be saved in the file `chain_set_001.rds`, the second in `chain_set_002.rds`, and so on. Successive sets are generated using the state of the sampler at the end of the previous set. This way, sets can be combined (e.g., using [mc_compile_chain()]) to create a coherent chain. The state of the sampler is saved in files named like `.model_state_of_set_001.rds`, `.model_state_of_set_002.rds`, etc.
 #' 
 #' The function will also restart where it last left off if it is stopped or **R** is stopped by loading the last `.model_state_of_set_XYZ.rds` file and continuing from there.
 #' 
@@ -25,7 +25,7 @@
 #' 
 #' @returns Nothing (saves files to disk).
 #' 
-#' @seealso [mc_combine_rolling_sets()] for combining the MCMC set files into a single MCMC chain.
+#' @seealso [mc_compile_chain()] for combining the MCMC set files into a single MCMC chain.
 #' 
 #' @example man/examples/ex_mc_nimble_rolling.r
 #' 
