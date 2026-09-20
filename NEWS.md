@@ -1,4 +1,4 @@
-# mcmHammer 4.0.0 (2026-09-17)
+# mcmHammer 4.0.1 (2026-09-20)
 o Restartable **nimble** models are here!
    * `mc_nimble_rolling()` runs a restartable **nimble** model.  
    * `mc_compile_chain()` combines samples created by `mc_nimble_rolling()` to create a single chain.  
