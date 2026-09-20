@@ -14,7 +14,7 @@ Find a bug? Please report it and how it occurred on \href{https://github.com/ada
 
 \code{\link[=mc_nimble_check]{mc_nimble_check()}}: Check a \strong{nimble} model for nodes with \code{NaN} or infinite likelihoods.
 \code{\link[=mc_nimble_rolling]{mc_nimble_rolling()}}: Run a restartable \strong{nimble} model.
-\code{\link[=mc_combine_rolling_sets]{mc_combine_rolling_sets()}}: Combine a set of MCMC iterations created by \code{mc_nimble_rolling()}.
+\code{\link[=mc_compile_chain]{mc_compile_chain()}}: Combine a set of MCMC iterations created by \code{mc_nimble_rolling()}.
 }
 
 \subsection{Extraction and subsetting}{

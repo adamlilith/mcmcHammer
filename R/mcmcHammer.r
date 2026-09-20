@@ -8,7 +8,7 @@
 #' ## Restartable **nimble** models
 #' [mc_nimble_check()]: Check a **nimble** model for nodes with `NaN` or infinite likelihoods.
 #' [mc_nimble_rolling()]: Run a restartable **nimble** model.
-#' [mc_combine_rolling_sets()]: Combine a set of MCMC iterations created by `mc_nimble_rolling()`.
+#' [mc_compile_chain()]: Combine a set of MCMC iterations created by `mc_nimble_rolling()`.
 
 #' ## Extraction and subsetting
 #' * [mc_extract()]: Mean, median, or lower or upper quantiles from the posterior distribution of a parameter.

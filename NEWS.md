@@ -1,7 +1,8 @@
-# mcmHammer 4.0.0 (2026-09-17)
+# mcmHammer 4.0.1 (2026-09-20)
 o Restartable **nimble** models are here!
    * `mc_nimble_rolling()` runs a restartable **nimble** model.  
-   * `mc_combine_rolling_sets()` combines samples created by `mc_nimble_rolling()` to create a single chain.  
+   * `mc_compile_chain()` combines samples created by `mc_nimble_rolling()` to create a single chain.  
+   * `mc_compile_chains()` combines samples created by multiple calls of `mc_nimble_rolling()` to create multiple chains.  
 
 o `mc_nimble_check()` checks **nimble** models for nodes with `NaN` or infinite likelihoods.  
 o Other bug fixes, too!  

@@ -2,7 +2,8 @@
 
 export(mc_cbind)
 export(mc_combine)
-export(mc_combine_rolling_sets)
+export(mc_compile_chain)
+export(mc_compile_chains)
 export(mc_extract)
 export(mc_n_chains)
 export(mc_n_iter)

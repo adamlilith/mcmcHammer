@@ -44,11 +44,14 @@ build <- buildMCMC(conf)
 compiled <- compileNimble(model, build, showCompilerOutput = FALSE)
 
 # MCMC samples to be saved here
-model_dir <- tempdir()
+model_dir_1 <- paste0(tempdir(), '/chain_1')
+model_dir_2 <- paste0(tempdir(), '/chain_2')
+
+model_dirs <- c(model_dir_1, model_dir_2)
 
 # (using small number of iterations to show continuity between sets)
 mc_nimble_rolling(
-	model_dir = model_dir,
+	model_dir = model_dir_1,
 	code = code,
 	config = config,
 	compiled = compiled,
@@ -58,20 +61,42 @@ mc_nimble_rolling(
    verbose = TRUE
 )
 
-mcmc_files <- list.files(model_dir, pattern = 'chains_set_')
+mc_nimble_rolling(
+	model_dir = model_dir_2,
+	code = code,
+	config = config,
+	compiled = compiled,
+	niter_per_set = 20,
+	max_sets = 3,
+   inits = inits,
+   verbose = TRUE
+)
+
+mcmc_files <- list.files(model_dir_1, pattern = 'chain_set_')
 mcmc_files
 
 # combine samples into a chain
-chain <- mc_combine_rolling_sets(model_dir)
+chains <- mc_compile_chains(model_dirs)
 
 # trace plots
-plot(chain[ , 'beta0'])
-plot(chain[ , 'beta1'])
-plot(chain[ , 'sigma'])
+plot(chains$samples[ , 'beta0'])
+plot(chains$samples[ , 'beta1'])
+plot(chains$samples[ , 'sigma'])
 
-# run 2 more sets
+# run 2 more sets for each chain
 mc_nimble_rolling(
-	model_dir = model_dir,
+	model_dir = model_dir_1,
+	code = code,
+	config = config,
+	compiled = compiled,
+	niter_per_set = 20,
+	max_sets = 5,
+   inits = inits,
+   verbose = TRUE
+)
+
+mc_nimble_rolling(
+	model_dir = model_dir_2,
 	code = code,
 	config = config,
 	compiled = compiled,
@@ -82,10 +107,10 @@ mc_nimble_rolling(
 )
 
 # combine samples into a chain
-chain <- mc_combine_rolling_sets(model_dir)
+chains <- mc_compile_chains(model_dirs)
 
 # trace plots
-plot(chain[ , 'beta0'])
-plot(chain[ , 'beta1'])
-plot(chain[ , 'sigma'])
+plot(chains$samples[ , 'beta0'])
+plot(chains$samples[ , 'beta1'])
+plot(chains$samples[ , 'sigma'])
 
