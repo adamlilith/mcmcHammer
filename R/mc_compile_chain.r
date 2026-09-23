@@ -6,6 +6,7 @@
 #' 
 #' @param model_dir Folder in which the model output is saved.
 #' @param model_dirs Folders in which output from multiple models is saved.
+#' @param clip Logical: If `TRUE` (default), the number of iterations in each chain will be limited to the smallest number of iterations across chains. If `FALSE`, then chains can have a different number of iterations, but no summary will be calculated.
 #' 
 #' @returns An `mcmc` object.
 #' 
@@ -45,7 +46,7 @@ mc_compile_chain <- function(model_dir) {
 
 #' @rdname mc_compile_chain
 #' @export mc_compile_chains
-mc_compile_chains <- function(model_dirs) {
+mc_compile_chains <- function(model_dirs, clip = TRUE) {
 
    chains <- list()
    chains$samples <- list()
@@ -58,25 +59,29 @@ mc_compile_chains <- function(model_dirs) {
 
    }
 
-   # clip chain to the smallest number of iterations
-   n_iter <- rep(NA_real_, n_chains)
-   min_iter <- Inf
-   for (i in seq_len(n_chains)) {
-      n_iter[i] <- nrow(chains$samples[[i]])
-      min_iter <- min(min_iter, n_iter[i])
-   }
+   if (clip) {
 
-   if (diff(range(n_iter)) > 0) {
+      # clip chain to the smallest number of iterations
+      n_iter <- rep(NA_real_, n_chains)
+      min_iter <- Inf
       for (i in seq_len(n_chains)) {
-         chain <- chains$samples[[i]]
-         chain <- chain[seq_len(min_iter), ]
-         chain <- coda::as.mcmc(chain, start = 1, end = min_niter, thin = 1)
-         chains$samples[[i]] <- chain
+         n_iter[i] <- nrow(chains$samples[[i]])
+         min_iter <- min(min_iter, n_iter[i])
       }
-   }
 
-   chains$samples <- coda::as.mcmc.list(chains$samples)
-   chains <- mc_resummarize(chains)
+      if (diff(range(n_iter)) > 0) {
+         for (i in seq_len(n_chains)) {
+            chain <- chains$samples[[i]]
+            chain <- chain[seq_len(min_iter), ]
+            chain <- coda::as.mcmc(chain, start = 1, end = min_niter, thin = 1)
+            chains$samples[[i]] <- chain
+         }
+      }
+
+      chains$samples <- coda::as.mcmc.list(chains$samples)
+      chains <- mc_resummarize(chains)
+
+   }
 
    chains
 
