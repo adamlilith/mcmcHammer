@@ -52,24 +52,22 @@ model_dirs <- c(model_dir_1, model_dir_2)
 # (using small number of iterations to show continuity between sets)
 mc_nimble_rolling(
 	model_dir = model_dir_1,
-	code = code,
 	config = config,
 	compiled = compiled,
 	niter_per_set = 20,
 	max_sets = 3,
-   inits = inits,
-   verbose = TRUE
+    inits = inits,
+    verbose = TRUE
 )
 
 mc_nimble_rolling(
 	model_dir = model_dir_2,
-	code = code,
 	config = config,
 	compiled = compiled,
 	niter_per_set = 20,
 	max_sets = 3,
-   inits = inits,
-   verbose = TRUE
+    inits = inits,
+    verbose = TRUE
 )
 
 mcmc_files <- list.files(model_dir_1, pattern = 'chain_set_')
@@ -91,8 +89,8 @@ mc_nimble_rolling(
 	compiled = compiled,
 	niter_per_set = 20,
 	max_sets = 5,
-   inits = inits,
-   verbose = TRUE
+    inits = inits,
+    verbose = TRUE
 )
 
 mc_nimble_rolling(
@@ -102,8 +100,8 @@ mc_nimble_rolling(
 	compiled = compiled,
 	niter_per_set = 20,
 	max_sets = 5,
-   inits = inits,
-   verbose = TRUE
+    inits = inits,
+    verbose = TRUE
 )
 
 # combine samples into a chain

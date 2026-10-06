@@ -15,7 +15,6 @@
 #' Other samplers cannot be restarted :(
 #' 
 #' @param model_dir Folder in which the model output is to be saved.
-#' @param code Output from [nimble::nimbleCode()].
 #' @param config Output from [nimble::configureMCMC()].
 #' @param compiled Output from [nimble::compileNimble()]
 #' @param niter_per_set Numeric (integer): Number of iterations per set. No thinning is done.
@@ -32,7 +31,6 @@
 #' @export
 mc_nimble_rolling <- function(
 	model_dir,
-	code,
 	config,
 	compiled,
 	niter_per_set,
